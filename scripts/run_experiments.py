@@ -573,8 +573,12 @@ def main():
                 "provider": "pinecone",
                 "config": {
                     "api_key": pinecone_api_key,
-                    "index_name": os.getenv("PINECONE_INDEX_NAME", "medmem0"),
+                    "collection_name": os.getenv("PINECONE_INDEX_NAME", "medmem0"),
                     "embedding_model_dims": 1536,
+                    "serverless_config": {
+                        "cloud": "aws",
+                        "region": "us-east-1",
+                    }
                 }
             },
             "embedder": {
