@@ -152,7 +152,9 @@ def verify_seed(memory: Memory, sample_patient_id: str):
         
         if results:
             print(f"  Found {len(results)} memories:")
-            for r in results[:2]:
+            for i, r in enumerate(results):
+                if i >= 2:
+                    break
                 content = r.get("memory", r.get("content", ""))[:100]
                 print(f"    - {content}...")
         else:
