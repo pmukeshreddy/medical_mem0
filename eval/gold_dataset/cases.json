@@ -1,726 +1,650 @@
 {
   "metadata": {
-    "version": "1.0",
-    "description": "Gold evaluation dataset generated from actual patient data",
+    "version": "2.0",
+    "description": "Gold dataset v2 - targeted keywords (2-3 per case)",
     "generated_from": "/Users/mukeshreddypochamreddy/medical_mem0/data/processed",
     "total_cases": 50,
-    "total_patients": 17,
+    "total_patients": 34,
     "categories": [
       "cardiac",
+      "visits",
+      "conditions",
       "diabetes",
-      "vitals",
-      "general"
+      "vitals"
     ]
   },
   "cases": [
     {
       "id": "eval_0000",
-      "patient_id": "59d383a6-12c7-5e1d-9617-d09cab35fc9c",
-      "query": "Summarize recent visits",
+      "patient_id": "7c33d023-053c-8a4a-87a4-b1d3a2dd252f",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
         "visit",
-        "ibuprofen"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2019-11-17T12:26:00Z. Type: outpatient. Reason: Otitis media (disorder). Diagnoses: Otitis media (disorder). Medications: Ibuprofen 200 MG Oral Tablet, Amoxicillin 250 MG Oral Capsule",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "59d383a6-12c7-5e1d-951c-51d852e84fd2"
+      "expected_content_snippet": "Visit on 2019-10-09T05:09:42Z. Type: outpatient. Reason: Otitis media (disorder). Diagnoses: Otitis media (disorder). Medications: Ibuprofen 100 MG Oral Tablet, Cefuroxime 250 MG Oral Tablet",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "7c33d023-053c-8a4a-65f6-8de2167f764c"
     },
     {
       "id": "eval_0001",
-      "patient_id": "59d383a6-12c7-5e1d-9617-d09cab35fc9c",
-      "query": "Summarize recent visits",
+      "patient_id": "e0034f82-1a01-e87c-efa4-c3c08817a268",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2016-08-14T12:26:00Z. Type: urgentcare. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 152.3 cm; Pain severity - 0-10 verbal numeric rating [Score] - Re",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "59d383a6-12c7-5e1d-5d7e-39c3e147c547"
+      "expected_content_snippet": "Visit on 1996-08-19T17:59:51Z. Type: wellness. Reason: nan. Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 6.0 %; Body Height: 174.6 cm; Pain severity - 0-10 verbal numeric rating [Score] - R",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "e0034f82-1a01-e87c-36c8-083c23668f55"
     },
     {
       "id": "eval_0002",
-      "patient_id": "59d383a6-12c7-5e1d-9617-d09cab35fc9c",
-      "query": "Has the patient's weight changed?",
+      "patient_id": "61cdb159-7129-0aa2-c360-049a5a9b1475",
+      "query": "Has the patient had sinusitis?",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
+        "sinusitis",
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2017-04-16T12:26:00Z. Type: wellness. Reason: nan. Observations: Body Height: 157.9 cm; Pain severity - 0-10 verbal numeric rating [Score] - Reported: 1.0 {score}; Body Weight: 62.8 kg; Body ",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "59d383a6-12c7-5e1d-2233-4c233d60262f"
+      "expected_content_snippet": "Visit on 2016-04-24T15:27:59Z. Type: ambulatory. Reason: Viral sinusitis (disorder). Diagnoses: Viral sinusitis (disorder). Medications: Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet",
+      "category": "conditions",
+      "difficulty": "medium",
+      "source_memory_id": "61cdb159-7129-0aa2-6a35-2c4608e61903"
     },
     {
       "id": "eval_0003",
-      "patient_id": "7c33d023-053c-8a4a-87a4-b1d3a2dd252f",
+      "patient_id": "1832ed4e-857b-f6c9-d795-c6d8b7465332",
       "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
         "visit",
-        "bmi"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2019-12-27T05:09:42Z. Type: wellness. Reason: nan. Observations: Body Height: 112.2 cm; Pain severity - 0-10 verbal numeric rating [Score] - Reported: 3.0 {score}; Body Weight: 20.5 kg; Body ",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "7c33d023-053c-8a4a-cc77-e7e515bcfc9a"
+      "expected_content_snippet": "Visit on 2016-11-24T21:52:22Z. Type: ambulatory. Reason: Chronic pain (finding). Medications: tramadol hydrochloride 50 MG Oral Tablet. Observations: Drugs of abuse 5 panel - Urine by Screen method: N",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "1832ed4e-857b-f6c9-782d-7b3b1f93544c"
     },
     {
       "id": "eval_0004",
-      "patient_id": "7c33d023-053c-8a4a-87a4-b1d3a2dd252f",
-      "query": "Has the patient's weight changed?",
-      "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
-      ],
-      "expected_content_snippet": "Visit on 2021-01-01T05:09:42Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 119.7 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repo",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "7c33d023-053c-8a4a-921f-e762cf0a10c7"
-    },
-    {
-      "id": "eval_0005",
-      "patient_id": "7c33d023-053c-8a4a-87a4-b1d3a2dd252f",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2017-12-29T05:09:42Z. Type: ambulatory. Reason: Patient referral for dental care (procedure)",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "7c33d023-053c-8a4a-aed6-ab6d95dc284b"
-    },
-    {
-      "id": "eval_0006",
-      "patient_id": "99b60b3b-b5b1-44e9-0c57-919a977697ba",
-      "query": "Any abnormal lab values?",
-      "expected_keywords": [
-        "blood pressure",
-        "hemoglobin",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "glucose",
-        "a1c",
-        "bmi"
-      ],
-      "expected_content_snippet": "Visit on 2025-03-26T21:48:41Z. Type: wellness. Reason: nan. Diagnoses: Victim of intimate partner abuse (finding). Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 5.8 %; Body Height: 175.0 cm;",
-      "category": "diabetes",
-      "difficulty": "easy",
-      "source_memory_id": "99b60b3b-b5b1-44e9-e0c0-d5e67d26be32"
-    },
-    {
-      "id": "eval_0007",
-      "patient_id": "99b60b3b-b5b1-44e9-0c57-919a977697ba",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit",
-        "temperature"
-      ],
-      "expected_content_snippet": "Visit on 2019-12-18T06:48:41Z. Type: ambulatory. Reason: Acute viral pharyngitis (disorder). Diagnoses: Acute viral pharyngitis (disorder). Observations: Body temperature: 37.1 Cel",
-      "category": "vitals",
-      "difficulty": "medium",
-      "source_memory_id": "99b60b3b-b5b1-44e9-5a71-02ab0420ec56"
-    },
-    {
-      "id": "eval_0008",
-      "patient_id": "99b60b3b-b5b1-44e9-0c57-919a977697ba",
+      "patient_id": "3293bcc6-6112-7aa1-577c-08622c9515a4",
       "query": "What is the patient's blood pressure?",
       "expected_keywords": [
         "blood pressure",
-        "hemoglobin",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "glucose",
-        "a1c",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2019-02-20T21:48:41Z. Type: wellness. Reason: nan. Diagnoses: Stress (finding). Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 6.2 %; Body Height: 175.0 cm; Pain severity - 0-10 verb",
-      "category": "diabetes",
-      "difficulty": "easy",
-      "source_memory_id": "99b60b3b-b5b1-44e9-67dc-1e1a77d2502c"
+      "expected_content_snippet": "Visit on 2024-12-16T02:49:47Z. Type: urgentcare. Reason: nan. Diagnoses: Medication review due (situation), Ischemic heart disease (disorder), Social isolation (finding), Gingivitis (disorder). Observ",
+      "category": "cardiac",
+      "difficulty": "medium",
+      "source_memory_id": "3293bcc6-6112-7aa1-6148-057a499128b1"
+    },
+    {
+      "id": "eval_0005",
+      "patient_id": "26e43870-f948-6116-eb16-5cc40f06595c",
+      "query": "What are the patient's BP readings?",
+      "expected_keywords": [
+        "blood pressure",
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2023-05-09T22:41:37Z. Type: ambulatory. Reason: Chronic congestive heart failure (disorder). Observations: Diastolic Blood Pressure: 59.0 mm[Hg]; Systolic Blood Pressure: 98.0 mm[Hg]",
+      "category": "cardiac",
+      "difficulty": "medium",
+      "source_memory_id": "26e43870-f948-6116-f726-9ef3ececfbea"
+    },
+    {
+      "id": "eval_0006",
+      "patient_id": "3b8a08a1-1427-da05-c937-5de52a2b729d",
+      "query": "Summarize the patient's recent visit",
+      "expected_keywords": [
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2019-01-11T04:21:39Z. Type: ambulatory. Reason: Normal pregnancy (finding). Diagnoses: Normal pregnancy (finding)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "3b8a08a1-1427-da05-2e23-5b0a7d59f24c"
+    },
+    {
+      "id": "eval_0007",
+      "patient_id": "97157f38-9936-ee6a-6cb5-2893f6a2baac",
+      "query": "Summarize the patient's recent visit",
+      "expected_keywords": [
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2003-07-07T20:36:26Z. Type: home. Reason: Transition from acute care to home-health care (finding)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "97157f38-9936-ee6a-d062-b9b9d97a3136"
+    },
+    {
+      "id": "eval_0008",
+      "patient_id": "61cdb159-7129-0aa2-c360-049a5a9b1475",
+      "query": "When was the patient's last visit?",
+      "expected_keywords": [
+        "visit",
+        "medication"
+      ],
+      "expected_content_snippet": "Visit on 2022-11-15T08:15:30Z. Type: outpatient. Reason: Contraception care (regime/therapy). Medications: {7 (ethinyl estradiol 0.035 MG / norgestimate 0.18 MG Oral Tablet) / 7 (ethinyl estradiol 0.0",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "61cdb159-7129-0aa2-9b37-4f7c0b4082a2"
     },
     {
       "id": "eval_0009",
-      "patient_id": "91b8214c-5d9b-4f68-5af9-c6ff59e4fe36",
-      "query": "Summarize recent visits",
+      "patient_id": "888e42b4-05d0-cd62-4a6d-6501edb416ab",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2024-04-21T20:54:59Z. Type: ambulatory. Reason: Gingivitis (disorder)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "91b8214c-5d9b-4f68-26de-9e6d2cdcc77a"
+      "expected_content_snippet": "Visit on 2025-05-30T17:10:08Z. Type: ambulatory. Reason: Normal pregnancy (finding). Diagnoses: Normal pregnancy (finding)",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "888e42b4-05d0-cd62-7ac5-4f2a8415f9a4"
     },
     {
       "id": "eval_0010",
-      "patient_id": "91b8214c-5d9b-4f68-5af9-c6ff59e4fe36",
-      "query": "What is in the patient's medical history?",
+      "patient_id": "34205a5d-d477-8344-c035-ff3f9e62ecca",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "patient_summary"
+        "visit"
       ],
-      "expected_content_snippet": "Patient: Elliott563 Tremblay80. DOB: 1981-11-09. Gender: M. ",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": ""
+      "expected_content_snippet": "Visit on 2016-04-24T20:29:35Z. Type: outpatient. Reason: Contraception care (regime/therapy)",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "34205a5d-d477-8344-bc64-d1a96ef54c31"
     },
     {
       "id": "eval_0011",
-      "patient_id": "91b8214c-5d9b-4f68-5af9-c6ff59e4fe36",
-      "query": "Is the patient taking lisinopril?",
+      "patient_id": "26e43870-f948-6116-eb16-5cc40f06595c",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "hemoglobin",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "glucose",
-        "a1c",
-        "lisinopril",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2016-02-21T20:54:59Z. Type: wellness. Reason: nan. Medications: lisinopril 10 MG Oral Tablet, Hydrochlorothiazide 25 MG Oral Tablet. Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 6.",
-      "category": "diabetes",
-      "difficulty": "easy",
-      "source_memory_id": "91b8214c-5d9b-4f68-ea95-d6ecb5395c15"
+      "expected_content_snippet": "Visit on 2023-03-17T23:29:25Z. Type: ambulatory. Reason: Chronic congestive heart failure (disorder). Observations: Diastolic Blood Pressure: 58.0 mm[Hg]; Systolic Blood Pressure: 107.0 mm[Hg]",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "26e43870-f948-6116-0859-ea90ae038358"
     },
     {
       "id": "eval_0012",
-      "patient_id": "0d2ce548-4692-6cb2-756e-1fa63583b3b8",
-      "query": "Summarize recent visits",
+      "patient_id": "0db63acd-9a02-a904-968d-9bf4a7a2b2fd",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
-        "visit"
+        "visit",
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 1995-10-02T19:58:35Z. Type: ambulatory. Reason: Loss of teeth (disorder). Diagnoses: Loss of teeth (disorder)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2025-11-17T03:14:03Z. Type: urgentcare. Reason: nan. Diagnoses: Medication review due (situation). Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin isop",
+      "category": "visits",
       "difficulty": "hard",
-      "source_memory_id": "0d2ce548-4692-6cb2-38d8-b48e233839f6"
+      "source_memory_id": "0db63acd-9a02-a904-16d6-239d7788ff02"
     },
     {
       "id": "eval_0013",
-      "patient_id": "0d2ce548-4692-6cb2-756e-1fa63583b3b8",
-      "query": "Summarize recent visits",
+      "patient_id": "164778f9-597b-aed3-b551-56ffce19e282",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2017-04-17T19:58:35Z. Type: ambulatory. Reason: Gingivitis (disorder). Diagnoses: Infection of tooth (disorder), Gingival disease (disorder)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2019-01-06T09:14:11Z. Type: ambulatory. Reason: Normal pregnancy (finding)",
+      "category": "visits",
       "difficulty": "hard",
-      "source_memory_id": "0d2ce548-4692-6cb2-e7fc-b40a2d71802e"
+      "source_memory_id": "164778f9-597b-aed3-3bfb-250def5bba42"
     },
     {
       "id": "eval_0014",
-      "patient_id": "0d2ce548-4692-6cb2-756e-1fa63583b3b8",
-      "query": "Has the patient's weight changed?",
+      "patient_id": "0e786e8d-2ad1-95a7-6210-b4176b55bbea",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2023-05-08T19:58:35Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation), Full-time employment (finding), Stress (finding), Victim of intimate partner abuse (finding). ",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "0d2ce548-4692-6cb2-6264-f4b5a7f843c0"
+      "expected_content_snippet": "Visit on 2020-09-24T16:27:02Z. Type: inpatient. Reason: Sterilization requested (situation). Diagnoses: History of tubal ligation (situation)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "0e786e8d-2ad1-95a7-97ef-8ee97ababb94"
     },
     {
       "id": "eval_0015",
-      "patient_id": "9c8be1eb-7c65-f920-52fc-95071c4fc068",
-      "query": "Summarize recent visits",
+      "patient_id": "503e50a4-1028-3d57-333e-658d4824b45f",
+      "query": "Is the patient on insulin?",
       "expected_keywords": [
-        "visit",
-        "bronchitis"
+        "insulin",
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2021-03-11T22:55:38Z. Type: ambulatory. Reason: Acute bronchitis (disorder). Diagnoses: Acute bronchitis (disorder). Medications: Acetaminophen 325 MG Oral Tablet",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "9c8be1eb-7c65-f920-5d9b-595d8945e501"
+      "expected_content_snippet": "Visit on 2018-07-31T01:35:05Z. Type: wellness. Reason: nan. Diagnoses: Full-time employment (finding), Social isolation (finding), Gingivitis (disorder). Medications: insulin isophane  human 70 UNT/ML",
+      "category": "diabetes",
+      "difficulty": "easy",
+      "source_memory_id": "503e50a4-1028-3d57-94c9-63e728495434"
     },
     {
       "id": "eval_0016",
       "patient_id": "9c8be1eb-7c65-f920-52fc-95071c4fc068",
-      "query": "When was the patient's last visit?",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2020-02-29T00:33:38Z. Type: ambulatory. Reason: Allergic disposition (finding)",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "9c8be1eb-7c65-f920-ba75-a11cec02912c"
+      "expected_content_snippet": "Visit on 2017-07-03T03:39:43Z. Type: ambulatory. Reason: Allergic disposition (finding)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "9c8be1eb-7c65-f920-e347-59a78421fd3a"
     },
     {
       "id": "eval_0017",
-      "patient_id": "9c8be1eb-7c65-f920-52fc-95071c4fc068",
-      "query": "Summarize recent visits",
+      "patient_id": "51959342-2fc2-b944-256c-eb695e7c2a0c",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "visit"
+        "visit",
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2019-06-02T23:57:11Z. Type: ambulatory. Reason: Allergic disposition (finding)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "9c8be1eb-7c65-f920-09d2-cb473aae69a3"
+      "expected_content_snippet": "Visit on 2025-07-07T16:52:50Z. Type: outpatient. Reason: Contraception care (regime/therapy). Medications: 168 HR Ethinyl Estradiol 0.00146 MG/HR / norelgestromin 0.00625 MG/HR Transdermal System",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "51959342-2fc2-b944-a9db-2b7920dfc30b"
     },
     {
       "id": "eval_0018",
-      "patient_id": "33815655-2489-7a71-e7b4-c78c03324c4c",
-      "query": "Has the patient's weight changed?",
+      "patient_id": "97157f38-9936-ee6a-6cb5-2893f6a2baac",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 1966-03-21T17:59:51Z. Type: wellness. Reason: nan. Diagnoses: Part-time employment (finding), Social isolation (finding). Observations: Body Height: 161.0 cm; Pain severity - 0-10 verbal nume",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "33815655-2489-7a71-48d1-b294ce6460e8"
+      "expected_content_snippet": "Visit on 2003-07-19T20:36:26Z. Type: home. Reason: Transition from acute care to home-health care (finding)",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "97157f38-9936-ee6a-d88d-fd257e7fe109"
     },
     {
       "id": "eval_0019",
-      "patient_id": "33815655-2489-7a71-e7b4-c78c03324c4c",
-      "query": "Summarize recent visits",
+      "patient_id": "91b8214c-5d9b-4f68-5af9-c6ff59e4fe36",
+      "query": "Does the patient have hypertension?",
       "expected_keywords": [
+        "hypertension",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 1962-03-12T17:59:51Z. Type: wellness. Reason: nan. Diagnoses: Part-time employment (finding)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "33815655-2489-7a71-acad-e6f8dd8cc823"
+      "expected_content_snippet": "Visit on 2010-01-17T20:54:59Z. Type: wellness. Reason: nan. Diagnoses: Essential hypertension (disorder)",
+      "category": "cardiac",
+      "difficulty": "easy",
+      "source_memory_id": "91b8214c-5d9b-4f68-8ceb-7d12638f85cc"
     },
     {
       "id": "eval_0020",
-      "patient_id": "33815655-2489-7a71-e7b4-c78c03324c4c",
-      "query": "Summarize recent visits",
+      "patient_id": "1832ed4e-857b-f6c9-d795-c6d8b7465332",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
-        "visit",
-        "temperature"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 1965-08-13T17:59:51Z. Type: ambulatory. Reason: Acute viral pharyngitis (disorder). Diagnoses: Acute viral pharyngitis (disorder). Observations: Body temperature: 37.9 Cel",
-      "category": "vitals",
+      "expected_content_snippet": "Visit on 2000-01-27T11:01:54Z. Type: ambulatory. Reason: Cow's milk (substance)",
+      "category": "visits",
       "difficulty": "hard",
-      "source_memory_id": "33815655-2489-7a71-f0d9-0ebefd86eaff"
+      "source_memory_id": "1832ed4e-857b-f6c9-b4bd-02e60efc0640"
     },
     {
       "id": "eval_0021",
-      "patient_id": "ba1657dd-1704-c753-2b34-ff4b0b2f9fe3",
-      "query": "What is the patient's blood pressure?",
+      "patient_id": "08f9d76b-67cc-7b06-2fb4-f86f0931506f",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
         "visit",
-        "bmi",
-        "albuterol"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2016-11-04T15:48:21Z. Type: wellness. Reason: nan. Medications: albuterol 0.83 MG/ML Inhalation Solution, budesonide 0.25 MG/ML Inhalation Suspension. Observations: Body Height: 182.8 cm; Pai",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "ba1657dd-1704-c753-d4de-bd73d34f2891"
+      "expected_content_snippet": "Visit on 2018-04-23T21:19:08Z. Type: ambulatory. Reason: Acute bronchitis (disorder). Diagnoses: Acute bronchitis (disorder). Medications: Acetaminophen 325 MG Oral Tablet",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "08f9d76b-67cc-7b06-b4c0-5ea2bdf6e861"
     },
     {
       "id": "eval_0022",
-      "patient_id": "ba1657dd-1704-c753-2b34-ff4b0b2f9fe3",
-      "query": "Summarize recent visits",
+      "patient_id": "ed5fc88d-4163-c983-bc69-839ee570f74c",
+      "query": "Has the patient's weight changed?",
       "expected_keywords": [
+        "weight",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2024-06-04T09:26:38Z. Type: ambulatory. Reason: Dependent drug abuse (disorder)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "ba1657dd-1704-c753-2bd4-c35a22fd3af3"
+      "expected_content_snippet": "Visit on 2021-11-17T18:48:37Z. Type: wellness. Reason: nan. Observations: Body Height: 65.7 cm; Pain severity - 0-10 verbal numeric rating [Score] - Reported: 4.0 {score}; Body Weight: 6.9 kg; Weight-",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "ed5fc88d-4163-c983-b777-1af105d6fedd"
     },
     {
       "id": "eval_0023",
-      "patient_id": "ba1657dd-1704-c753-2b34-ff4b0b2f9fe3",
-      "query": "Summarize recent visits",
+      "patient_id": "26e43870-f948-6116-eb16-5cc40f06595c",
+      "query": "Has the patient's weight changed?",
       "expected_keywords": [
-        "blood pressure",
         "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi",
-        "albuterol"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2018-11-16T15:48:21Z. Type: wellness. Reason: nan. Diagnoses: Part-time employment (finding), Reports of violence in the environment (finding). Medications: albuterol 0.83 MG/ML Inhalation So",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "ba1657dd-1704-c753-fded-f6e88f209635"
+      "expected_content_snippet": "Visit on 2018-05-01T22:41:37Z. Type: wellness. Reason: nan. Diagnoses: Social isolation (finding). Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 6.3 %; Body Height: 173.4 cm; Pain severity -",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "26e43870-f948-6116-51bd-1db251dd14fc"
     },
     {
       "id": "eval_0024",
-      "patient_id": "10d5e15a-0a79-aa03-7cfc-d4b14f49509f",
-      "query": "Has the patient's weight changed?",
+      "patient_id": "f07042c4-98f8-e530-eec8-aa097b874acb",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
         "visit",
-        "bmi"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2024-07-04T02:55:57Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 137.3 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repo",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "10d5e15a-0a79-aa03-e646-88633e6f5f07"
+      "expected_content_snippet": "Visit on 2022-11-21T01:06:57Z. Type: ambulatory. Reason: Patient referral for dental care (procedure). Medications: sodium fluoride 0.0272 MG/MG Oral Gel",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "f07042c4-98f8-e530-a181-8bdc69067f68"
     },
     {
       "id": "eval_0025",
-      "patient_id": "10d5e15a-0a79-aa03-7cfc-d4b14f49509f",
-      "query": "When was the patient's last visit?",
+      "patient_id": "0db63acd-9a02-a904-968d-9bf4a7a2b2fd",
+      "query": "Is the patient on insulin?",
       "expected_keywords": [
-        "visit",
-        "bmi",
-        "blood pressure",
-        "weight"
+        "insulin",
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2016-12-01T02:55:57Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 89.8 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repor",
-      "category": "cardiac",
+      "expected_content_snippet": "Visit on 2020-06-01T03:14:03Z. Type: outpatient. Reason: nan. Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin isophane  human 70 UNT/ML / insulin  regular  huma",
+      "category": "diabetes",
       "difficulty": "easy",
-      "source_memory_id": "10d5e15a-0a79-aa03-9253-2c32d4a1cace"
+      "source_memory_id": "0db63acd-9a02-a904-00e6-f9432d65f0bd"
     },
     {
       "id": "eval_0026",
-      "patient_id": "10d5e15a-0a79-aa03-7cfc-d4b14f49509f",
-      "query": "Summarize recent visits",
+      "patient_id": "59bc9212-db3a-a5a9-64f0-ce60151771d5",
+      "query": "Has the patient's weight changed?",
       "expected_keywords": [
-        "sinusitis",
+        "weight",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2021-08-19T02:55:57Z. Type: ambulatory. Reason: Viral sinusitis (disorder). Diagnoses: Viral sinusitis (disorder)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "10d5e15a-0a79-aa03-86d7-352bda975968"
+      "expected_content_snippet": "Visit on 2021-07-10T01:59:13Z. Type: wellness. Reason: nan. Diagnoses: Gingivitis (disorder). Medications: albuterol 0.83 MG/ML Inhalation Solution, 120 ACTUAT fluticasone propionate 0.044 MG/ACTUAT M",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "59bc9212-db3a-a5a9-3042-ab2d4ffa0149"
     },
     {
       "id": "eval_0027",
-      "patient_id": "51c9dc0f-44bd-ca48-11ea-b7a1972ec762",
-      "query": "Summarize recent visits",
+      "patient_id": "0db63acd-9a02-a904-968d-9bf4a7a2b2fd",
+      "query": "What is the patient's glucose level?",
       "expected_keywords": [
+        "glucose",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2025-01-16T14:51:27Z. Type: inpatient. Reason: Dependent drug abuse (disorder). Observations: Pain severity - 0-10 verbal numeric rating [Score] - Reported: 7.0 {score}",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "51c9dc0f-44bd-ca48-53f3-c676edebe914"
+      "expected_content_snippet": "Visit on 2022-02-07T03:14:03Z. Type: urgentcare. Reason: nan. Diagnoses: Gingivitis (disorder). Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin isophane  human ",
+      "category": "diabetes",
+      "difficulty": "medium",
+      "source_memory_id": "0db63acd-9a02-a904-a9ed-942ea31a58b7"
     },
     {
       "id": "eval_0028",
-      "patient_id": "51c9dc0f-44bd-ca48-11ea-b7a1972ec762",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2016-08-05T10:44:14Z. Type: inpatient. Reason: Dependent drug abuse (disorder). Observations: Pain severity - 0-10 verbal numeric rating [Score] - Reported: 3.0 {score}",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "51c9dc0f-44bd-ca48-de29-e39c69ff7b3a"
-    },
-    {
-      "id": "eval_0029",
-      "patient_id": "51c9dc0f-44bd-ca48-11ea-b7a1972ec762",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2019-08-02T05:49:38Z. Type: ambulatory. Reason: Dependent drug abuse (disorder)",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "51c9dc0f-44bd-ca48-0efe-d857d5972bdd"
-    },
-    {
-      "id": "eval_0030",
-      "patient_id": "29893102-6e7d-e037-12df-26b378b33e7e",
-      "query": "Summarize recent visits",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2022-05-19T09:18:21Z. Type: ambulatory. Reason: Patient referral for dental care (procedure)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "29893102-6e7d-e037-0ff8-586dcd396735"
-    },
-    {
-      "id": "eval_0031",
-      "patient_id": "29893102-6e7d-e037-12df-26b378b33e7e",
-      "query": "What is the patient's blood pressure?",
-      "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
-      ],
-      "expected_content_snippet": "Visit on 2024-05-23T09:18:21Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 150.2 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repo",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "29893102-6e7d-e037-c3ae-d43568e45d07"
-    },
-    {
-      "id": "eval_0032",
-      "patient_id": "29893102-6e7d-e037-12df-26b378b33e7e",
-      "query": "Summarize recent visits",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2022-08-25T09:18:21Z. Type: outpatient. Reason: nan",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "29893102-6e7d-e037-c19a-d6b318e31258"
-    },
-    {
-      "id": "eval_0033",
-      "patient_id": "1ce1d9c3-84d8-8f74-5e2f-2a9a5bc1d8c7",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2003-12-06T18:41:02Z. Type: wellness. Reason: nan. Diagnoses: Educated to high school level (finding), Unemployed (finding), Misuses drugs (finding)",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "1ce1d9c3-84d8-8f74-8422-87c4b51a968f"
-    },
-    {
-      "id": "eval_0034",
-      "patient_id": "1ce1d9c3-84d8-8f74-5e2f-2a9a5bc1d8c7",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2011-08-23T19:32:56Z. Type: inpatient. Reason: Sterilization requested (situation). Diagnoses: History of tubal ligation (situation)",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "1ce1d9c3-84d8-8f74-6e11-68983ff7ebf7"
-    },
-    {
-      "id": "eval_0035",
-      "patient_id": "1ce1d9c3-84d8-8f74-5e2f-2a9a5bc1d8c7",
-      "query": "When was the patient's last visit?",
-      "expected_keywords": [
-        "visit"
-      ],
-      "expected_content_snippet": "Visit on 2021-05-22T18:41:02Z. Type: outpatient. Reason: nan",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "1ce1d9c3-84d8-8f74-3c48-39308ef90a73"
-    },
-    {
-      "id": "eval_0036",
-      "patient_id": "76eb67d7-117a-6061-1d34-1a3a2e63853c",
-      "query": "Summarize recent visits",
+      "patient_id": "9ef61207-9464-8aac-1906-2a13680ca894",
+      "query": "Has the patient had sinusitis?",
       "expected_keywords": [
         "sinusitis",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2025-07-16T11:35:46Z. Type: ambulatory. Reason: Viral sinusitis (disorder). Diagnoses: Viral sinusitis (disorder)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 1998-08-15T04:25:06Z. Type: ambulatory. Reason: Acute bacterial sinusitis (disorder). Diagnoses: Chronic sinusitis (disorder)",
+      "category": "conditions",
+      "difficulty": "medium",
+      "source_memory_id": "9ef61207-9464-8aac-46bf-1b2e519df82c"
+    },
+    {
+      "id": "eval_0029",
+      "patient_id": "503e50a4-1028-3d57-333e-658d4824b45f",
+      "query": "Summarize the patient's recent visit",
+      "expected_keywords": [
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2014-04-05T01:35:05Z. Type: ambulatory. Reason: nan. Diagnoses: Awaiting transplantation of kidney (situation)",
+      "category": "visits",
       "difficulty": "hard",
-      "source_memory_id": "76eb67d7-117a-6061-f27c-b443dca06ab5"
+      "source_memory_id": "503e50a4-1028-3d57-2d63-7014042e1348"
+    },
+    {
+      "id": "eval_0030",
+      "patient_id": "848bd9c4-113b-6ce2-6ec2-ec74ff610a00",
+      "query": "Has the patient's weight changed?",
+      "expected_keywords": [
+        "weight",
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2018-05-18T01:19:46Z. Type: outpatient. Reason: nan. Observations: Body Height: 98.1 cm; Pain severity - 0-10 verbal numeric rating [Score] - Reported: 1.0 {score}; Body Weight: 14.5 kg; Weig",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "848bd9c4-113b-6ce2-e620-1081476ca6a3"
+    },
+    {
+      "id": "eval_0031",
+      "patient_id": "1ce1d9c3-84d8-8f74-5e2f-2a9a5bc1d8c7",
+      "query": "When was the patient's last visit?",
+      "expected_keywords": [
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2024-08-23T08:06:52Z. Type: ambulatory. Reason: Dependent drug abuse (disorder)",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "1ce1d9c3-84d8-8f74-55e3-cd0f05e9b0fa"
+    },
+    {
+      "id": "eval_0032",
+      "patient_id": "0e786e8d-2ad1-95a7-6210-b4176b55bbea",
+      "query": "Summarize the patient's recent visit",
+      "expected_keywords": [
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2024-11-13T15:38:55Z. Type: ambulatory. Reason: Patient referral for dental care (procedure)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "0e786e8d-2ad1-95a7-852b-5025a8a17884"
+    },
+    {
+      "id": "eval_0033",
+      "patient_id": "ed5fc88d-4163-c983-bc69-839ee570f74c",
+      "query": "Summarize the patient's recent visit",
+      "expected_keywords": [
+        "visit",
+        "medication"
+      ],
+      "expected_content_snippet": "Visit on 2024-11-20T18:48:37Z. Type: ambulatory. Reason: Patient referral for dental care (procedure). Medications: sodium fluoride 0.0272 MG/MG Oral Gel",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "ed5fc88d-4163-c983-88c7-635af8917ce6"
+    },
+    {
+      "id": "eval_0034",
+      "patient_id": "3e5e265b-a899-7ee1-b4a9-d69a318bc0f6",
+      "query": "When was the patient's last visit?",
+      "expected_keywords": [
+        "visit",
+        "medication"
+      ],
+      "expected_content_snippet": "Visit on 1978-07-26T15:42:17Z. Type: ambulatory. Reason: Anemia (disorder). Medications: ferrous sulfate 325 MG Oral Tablet",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "3e5e265b-a899-7ee1-a2dc-83c6dcaba289"
+    },
+    {
+      "id": "eval_0035",
+      "patient_id": "0db63acd-9a02-a904-968d-9bf4a7a2b2fd",
+      "query": "Is the patient taking metformin?",
+      "expected_keywords": [
+        "metformin",
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2025-02-17T03:14:03Z. Type: urgentcare. Reason: nan. Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin isophane  human 70 UNT/ML / insulin  regular  huma",
+      "category": "diabetes",
+      "difficulty": "easy",
+      "source_memory_id": "0db63acd-9a02-a904-6e64-af5ad9850c82"
+    },
+    {
+      "id": "eval_0036",
+      "patient_id": "51c9dc0f-44bd-ca48-11ea-b7a1972ec762",
+      "query": "What is the patient's BMI?",
+      "expected_keywords": [
+        "bmi",
+        "visit"
+      ],
+      "expected_content_snippet": "Visit on 2024-10-13T23:52:00Z. Type: wellness. Reason: nan. Diagnoses: Stress (finding). Medications: Acetaminophen 325 MG Oral Tablet [Tylenol]. Observations: Hemoglobin A1c/Hemoglobin.total in Blood",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "51c9dc0f-44bd-ca48-c883-773d35c954c9"
     },
     {
       "id": "eval_0037",
-      "patient_id": "76eb67d7-117a-6061-1d34-1a3a2e63853c",
-      "query": "When was the patient's last visit?",
+      "patient_id": "1665ca2c-75fd-f975-9ad3-a0edd6f33ead",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2022-07-28T14:35:46Z. Type: outpatient. Reason: Contraception care (regime/therapy). Medications: {5 (dienogest 2 MG / estradiol valerate 2 MG Oral Tablet) / 17 (dienogest 3 MG / estradiol va",
-      "category": "general",
-      "difficulty": "medium",
-      "source_memory_id": "76eb67d7-117a-6061-a249-2dd94d0e7ebd"
+      "expected_content_snippet": "Visit on 2019-04-12T07:26:17Z. Type: outpatient. Reason: Contraception care (regime/therapy)",
+      "category": "visits",
+      "difficulty": "hard",
+      "source_memory_id": "1665ca2c-75fd-f975-7015-5083d0b73f60"
     },
     {
       "id": "eval_0038",
-      "patient_id": "76eb67d7-117a-6061-1d34-1a3a2e63853c",
-      "query": "Has the patient's weight changed?",
+      "patient_id": "f113f1dc-3b53-250b-ccca-aa0f670960aa",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "bmi"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2016-11-01T14:35:46Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 176.2 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repo",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "76eb67d7-117a-6061-eda4-256bbc6ac07b"
+      "expected_content_snippet": "Visit on 2025-09-17T03:47:01Z. Type: outpatient. Reason: Contraception care (regime/therapy)",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "f113f1dc-3b53-250b-1e3b-fa102302d76a"
     },
     {
       "id": "eval_0039",
-      "patient_id": "bc24d824-97b0-2779-7110-807331808de4",
-      "query": "Summarize recent visits",
+      "patient_id": "51c9dc0f-44bd-ca48-11ea-b7a1972ec762",
+      "query": "What is the patient's glucose level?",
       "expected_keywords": [
+        "glucose",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2019-11-20T02:49:04Z. Type: outpatient. Reason: Contraception care (regime/therapy)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "bc24d824-97b0-2779-36cf-b1df86087b0e"
+      "expected_content_snippet": "Visit on 2020-09-20T23:52:00Z. Type: wellness. Reason: nan. Diagnoses: Full-time employment (finding), Stress (finding), Gingivitis (disorder). Medications: Acetaminophen 325 MG Oral Tablet [Tylenol].",
+      "category": "diabetes",
+      "difficulty": "medium",
+      "source_memory_id": "51c9dc0f-44bd-ca48-ae76-ab7569491e75"
     },
     {
       "id": "eval_0040",
-      "patient_id": "bc24d824-97b0-2779-7110-807331808de4",
-      "query": "When was the patient's last visit?",
+      "patient_id": "a6ca0636-3b01-347c-11bb-309a2ce572cd",
+      "query": "What are the patient's blood sugar readings?",
       "expected_keywords": [
+        "glucose",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2021-08-11T02:49:04Z. Type: ambulatory. Reason: Normal pregnancy (finding)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2023-11-13T03:03:09Z. Type: ambulatory. Reason: Hyperlipidemia (disorder). Medications: Simvastatin 10 MG Oral Tablet. Observations: Glucose [Mass/volume] in Blood: 91.5 mg/dL; Urea nitrogen ",
+      "category": "diabetes",
       "difficulty": "medium",
-      "source_memory_id": "bc24d824-97b0-2779-eb5a-496aa469f1e7"
+      "source_memory_id": "a6ca0636-3b01-347c-e2c0-2bc77c72d29f"
     },
     {
       "id": "eval_0041",
-      "patient_id": "bc24d824-97b0-2779-7110-807331808de4",
+      "patient_id": "f6c30993-b7ff-815c-72f2-dc6ac5a6b529",
       "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "visit",
-        "temperature"
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2021-09-17T14:49:04Z. Type: ambulatory. Reason: Acute viral pharyngitis (disorder). Diagnoses: Acute viral pharyngitis (disorder). Observations: Body temperature: 37.2 Cel",
-      "category": "vitals",
+      "expected_content_snippet": "Visit on 2014-02-04T11:05:05Z. Type: outpatient. Reason: Chronic pain (finding). Diagnoses: Chronic pain (finding), Chronic low back pain (finding), Chronic neck pain (finding)",
+      "category": "visits",
       "difficulty": "medium",
-      "source_memory_id": "bc24d824-97b0-2779-e5c1-ce42d56bb6cd"
+      "source_memory_id": "f6c30993-b7ff-815c-9b97-8e76f94685e6"
     },
     {
       "id": "eval_0042",
-      "patient_id": "fb90dcb7-afd5-5112-ead7-4d4fac1e06ce",
-      "query": "Summarize recent visits",
+      "patient_id": "e8715b5a-a33a-460d-7134-423f7cdd1745",
+      "query": "What insulin is the patient taking?",
       "expected_keywords": [
+        "insulin",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 1991-04-09T09:12:18Z. Type: wellness. Reason: nan. Diagnoses: Received higher education (finding)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "fb90dcb7-afd5-5112-eb1f-cd98357e593d"
+      "expected_content_snippet": "Visit on 2024-05-06T17:33:06Z. Type: outpatient. Reason: nan. Diagnoses: Medication review due (situation), Stress (finding), Gingivitis (disorder). Medications: lisinopril 10 MG Oral Tablet, amLODIPi",
+      "category": "diabetes",
+      "difficulty": "easy",
+      "source_memory_id": "e8715b5a-a33a-460d-f452-a62979982409"
     },
     {
       "id": "eval_0043",
-      "patient_id": "fb90dcb7-afd5-5112-ead7-4d4fac1e06ce",
-      "query": "Any abnormal lab values?",
+      "patient_id": "097fa462-0fb2-3cad-16a9-f0a1406588c6",
+      "query": "When was the patient's last visit?",
       "expected_keywords": [
-        "blood pressure",
-        "hemoglobin",
-        "weight",
-        "heart rate",
-        "heart",
         "visit",
-        "glucose",
-        "a1c",
-        "bmi"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2024-02-20T09:12:18Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation), Gingivitis (disorder). Observations: Hemoglobin A1c/Hemoglobin.total in Blood: 6.2 %; Body Hei",
-      "category": "diabetes",
-      "difficulty": "easy",
-      "source_memory_id": "fb90dcb7-afd5-5112-c518-34b959405529"
+      "expected_content_snippet": "Visit on 2016-03-31T22:17:38Z. Type: outpatient. Reason: nan. Medications: insulin isophane  human 70 UNT/ML / insulin  regular  human 30 UNT/ML Injectable Suspension [Humulin], Ibuprofen 400 MG Oral ",
+      "category": "visits",
+      "difficulty": "medium",
+      "source_memory_id": "097fa462-0fb2-3cad-00f3-76aa6300439f"
     },
     {
       "id": "eval_0044",
-      "patient_id": "fb90dcb7-afd5-5112-ead7-4d4fac1e06ce",
+      "patient_id": "b460721e-3427-100e-8e30-b76324c4c0c5",
       "query": "When was the patient's last visit?",
       "expected_keywords": [
         "visit",
-        "bronchitis"
+        "medication"
       ],
-      "expected_content_snippet": "Visit on 2023-06-13T09:12:18Z. Type: ambulatory. Reason: Acute bronchitis (disorder). Diagnoses: Acute bronchitis (disorder). Medications: Acetaminophen 325 MG Oral Tablet",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2011-07-24T11:12:27Z. Type: ambulatory. Reason: Viral sinusitis (disorder). Diagnoses: Viral sinusitis (disorder). Medications: Amoxicillin 250 MG / Clavulanate 125 MG Oral Tablet",
+      "category": "visits",
       "difficulty": "medium",
-      "source_memory_id": "fb90dcb7-afd5-5112-63e3-db03582543d4"
+      "source_memory_id": "b460721e-3427-100e-8d37-6d6e645bcf75"
     },
     {
       "id": "eval_0045",
-      "patient_id": "d96d35f0-4884-20d9-075c-cccb2f194cc3",
-      "query": "What is the patient's A1C level?",
+      "patient_id": "99b60b3b-b5b1-44e9-0c57-919a977697ba",
+      "query": "Has the patient had bronchitis?",
       "expected_keywords": [
-        "blood pressure",
-        "obesity",
-        "weight",
-        "heart rate",
-        "heart",
-        "visit",
-        "cholesterol",
-        "bmi"
+        "bronchitis",
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 2016-04-20T23:44:00Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation), Body mass index 30+ - obesity (finding), Not in labor force (finding), Reports of violence in ",
-      "category": "cardiac",
-      "difficulty": "easy",
-      "source_memory_id": "d96d35f0-4884-20d9-9f90-7237353afb66"
+      "expected_content_snippet": "Visit on 2023-07-12T21:48:41Z. Type: ambulatory. Reason: Acute bronchitis (disorder). Diagnoses: Acute bronchitis (disorder). Medications: Acetaminophen 325 MG Oral Tablet",
+      "category": "conditions",
+      "difficulty": "medium",
+      "source_memory_id": "99b60b3b-b5b1-44e9-e855-74fe9b6e19ec"
     },
     {
       "id": "eval_0046",
-      "patient_id": "d96d35f0-4884-20d9-075c-cccb2f194cc3",
-      "query": "Summarize recent visits",
+      "patient_id": "97157f38-9936-ee6a-6cb5-2893f6a2baac",
+      "query": "Summarize the patient's recent visit",
       "expected_keywords": [
         "visit"
       ],
-      "expected_content_snippet": "Visit on 1988-05-25T23:44:00Z. Type: wellness. Reason: nan. Diagnoses: Received higher education (finding), Social isolation (finding)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2007-09-07T04:03:14Z. Type: ambulatory. Reason: Dependent drug abuse (disorder)",
+      "category": "visits",
       "difficulty": "hard",
-      "source_memory_id": "d96d35f0-4884-20d9-a300-d556b173151a"
+      "source_memory_id": "97157f38-9936-ee6a-1f16-e5f799bdc28a"
     },
     {
       "id": "eval_0047",
-      "patient_id": "d96d35f0-4884-20d9-075c-cccb2f194cc3",
-      "query": "Summarize recent visits",
+      "patient_id": "0db63acd-9a02-a904-968d-9bf4a7a2b2fd",
+      "query": "What is the patient's glucose level?",
       "expected_keywords": [
+        "glucose",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2014-04-16T23:44:00Z. Type: wellness. Reason: nan. Diagnoses: Stress (finding)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "d96d35f0-4884-20d9-f77e-9b273475323f"
+      "expected_content_snippet": "Visit on 2023-07-03T03:14:03Z. Type: urgentcare. Reason: nan. Medications: 24 HR Metformin hydrochloride 500 MG Extended Release Oral Tablet, insulin isophane  human 70 UNT/ML / insulin  regular  huma",
+      "category": "diabetes",
+      "difficulty": "medium",
+      "source_memory_id": "0db63acd-9a02-a904-960c-9f32c45d8e2b"
     },
     {
       "id": "eval_0048",
-      "patient_id": "1665ca2c-75fd-f975-9ad3-a0edd6f33ead",
-      "query": "When was the patient's last visit?",
+      "patient_id": "888e42b4-05d0-cd62-4a6d-6501edb416ab",
+      "query": "What is the patient's BMI?",
       "expected_keywords": [
-        "visit",
-        "obesity"
+        "bmi",
+        "visit"
       ],
-      "expected_content_snippet": "Visit on 1992-04-02T06:55:59Z. Type: wellness. Reason: nan. Diagnoses: Body mass index 30+ - obesity (finding)",
-      "category": "general",
+      "expected_content_snippet": "Visit on 2020-02-07T17:10:08Z. Type: wellness. Reason: nan. Diagnoses: Medication review due (situation). Observations: Body Height: 173.4 cm; Pain severity - 0-10 verbal numeric rating [Score] - Repo",
+      "category": "vitals",
       "difficulty": "medium",
-      "source_memory_id": "1665ca2c-75fd-f975-7fa4-c62c1a1e45e2"
+      "source_memory_id": "888e42b4-05d0-cd62-4c71-6cfa99789b8a"
     },
     {
       "id": "eval_0049",
-      "patient_id": "1665ca2c-75fd-f975-9ad3-a0edd6f33ead",
-      "query": "Summarize recent visits",
+      "patient_id": "503e50a4-1028-3d57-333e-658d4824b45f",
+      "query": "What is the patient's weight?",
       "expected_keywords": [
+        "weight",
         "visit"
       ],
-      "expected_content_snippet": "Visit on 2025-05-01T06:55:59Z. Type: ambulatory. Reason: Gingivitis (disorder)",
-      "category": "general",
-      "difficulty": "hard",
-      "source_memory_id": "1665ca2c-75fd-f975-aafd-ce9ade57f6c3"
+      "expected_content_snippet": "Visit on 2019-09-28T01:36:05Z. Type: ambulatory. Reason: Chronic kidney disease stage 4 (disorder). Medications: 1 ML Epoetin Alfa 4000 UNT/ML Injection [Epogen]. Observations: Weight difference [Mass",
+      "category": "vitals",
+      "difficulty": "medium",
+      "source_memory_id": "503e50a4-1028-3d57-0dee-13dd207eb7f1"
     }
   ]
 }

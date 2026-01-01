@@ -1,27 +1,4 @@
-"""
-HyDE: Hypothetical Document Embeddings
 
-Paper: "Precise Zero-Shot Dense Retrieval without Relevance Labels" (2022)
-https://arxiv.org/abs/2212.10496
-
-Key Idea:
-- Questions and answers live in different embedding spaces
-- Generate a hypothetical answer first, then use THAT for retrieval
-- Hypothetical answer is closer to real documents than the question
-
-Flow:
-    Normal:  Query → Embed(Query) → Search
-    HyDE:    Query → LLM(Generate Hypothetical) → Embed(Hypothetical) → Search
-
-Example:
-    Query: "What's the patient's diabetes status?"
-    
-    Hypothetical: "Patient has Type 2 Diabetes diagnosed in 2019,
-                   currently managed with Metformin 1000mg twice daily.
-                   Most recent A1C was 7.2% from January 2024."
-    
-    Search uses embedding of hypothetical → Better matches
-"""
 
 import os
 import time

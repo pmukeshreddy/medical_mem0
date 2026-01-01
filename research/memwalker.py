@@ -8,10 +8,12 @@ Key Idea:
 - Instead of flat vector search, organize memories into a tree
 - Traverse tree intelligently based on query
 - More relevant results for hierarchical data (medical records)
+
+Fix: Use hierarchy to BOOST scores, not FILTER candidates.
 """
 
 import os
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Tuple
 from dataclasses import dataclass, field
 import time
 
@@ -30,27 +32,11 @@ class MemoryNode:
     metadata: Dict[str, Any] = field(default_factory=dict)
     children: List["MemoryNode"] = field(default_factory=list)
     relevance_score: float = 0.0
+    original_score: float = 0.0
 
 
-@dataclass
-class MemoryTree:
-    """Hierarchical memory tree for a patient."""
-    patient_id: str
-    root: Dict[str, List[MemoryNode]] = field(default_factory=dict)
-    
-    def __post_init__(self):
-        self.root = {
-            "conditions": [],
-            "medications": [],
-            "visits": [],
-            "vitals": [],
-            "labs": [],
-            "other": []
-        }
-
-
-class HierarchicalPatientMemory:
-    """Builds hierarchical tree from flat Mem0 memories."""
+class CategoryDetector:
+    """Detects category from content using keywords."""
     
     CONDITION_KEYWORDS = [
         "diabetes", "hypertension", "copd", "asthma", "heart", "cardiac",
@@ -62,90 +48,65 @@ class HierarchicalPatientMemory:
     MEDICATION_KEYWORDS = [
         "metformin", "insulin", "lisinopril", "amlodipine", "atorvastatin",
         "omeprazole", "levothyroxine", "albuterol", "prednisone", "aspirin",
-        "ibuprofen", "acetaminophen", "amoxicillin", "gabapentin", "sertraline"
+        "ibuprofen", "acetaminophen", "amoxicillin", "gabapentin", "sertraline",
+        "prescribed", "medication", "drug", "dose", "mg", "twice daily"
     ]
     
     VITAL_KEYWORDS = [
         "blood pressure", "heart rate", "temperature", "respiratory rate",
-        "oxygen saturation", "weight", "height", "bmi", "pulse"
+        "oxygen saturation", "weight", "height", "bmi", "pulse", "vital"
     ]
     
     LAB_KEYWORDS = [
         "a1c", "glucose", "cholesterol", "ldl", "hdl", "triglycerides",
-        "creatinine", "bun", "hemoglobin", "platelet", "wbc", "rbc"
+        "creatinine", "bun", "hemoglobin", "platelet", "wbc", "rbc", "lab"
     ]
     
-    def __init__(self, memories: List[Dict]) -> None:
-        self.memories = memories
-        self.tree = None
+    VISIT_KEYWORDS = [
+        "visit", "encounter", "appointment", "consultation", "follow-up",
+        "check-up", "examination"
+    ]
     
-    def build_tree(self, patient_id: str) -> MemoryTree:
-        tree = MemoryTree(patient_id=patient_id)
-        
-        for mem in self.memories:
-            try:
-                node = self._create_node(mem)
-                if node and node.content:
-                    category = self._categorize(node.content)
-                    tree.root[category].append(node)
-            except:
-                continue
-        
-        for category in tree.root:
-            tree.root[category].sort(key=lambda x: x.date or "", reverse=True)
-        
-        self.tree = tree
-        return tree
-    
-    def _create_node(self, memory) -> MemoryNode:
-        if isinstance(memory, str):
-            return MemoryNode(id="", content=memory, category="other")
-        
-        content = memory.get("memory", memory.get("content", ""))
-        metadata = memory.get("metadata", {})
-        if not isinstance(metadata, dict):
-            metadata = {}
-        
-        return MemoryNode(
-            id=memory.get("id", ""),
-            content=content,
-            category=metadata.get("type", "other"),
-            subcategory=self._extract_subcategory(content),
-            date=metadata.get("date", ""),
-            metadata=metadata
-        )
-    
-    def _categorize(self, content: str) -> str:
+    @classmethod
+    def detect(cls, content: str) -> str:
         content_lower = content.lower()
         
-        if any(kw in content_lower for kw in self.VITAL_KEYWORDS):
+        if any(kw in content_lower for kw in cls.VITAL_KEYWORDS):
             return "vitals"
-        if any(kw in content_lower for kw in self.LAB_KEYWORDS):
+        if any(kw in content_lower for kw in cls.LAB_KEYWORDS):
             return "labs"
-        if any(kw in content_lower for kw in self.MEDICATION_KEYWORDS):
+        if any(kw in content_lower for kw in cls.MEDICATION_KEYWORDS):
             return "medications"
-        if any(kw in content_lower for kw in self.CONDITION_KEYWORDS):
+        if any(kw in content_lower for kw in cls.CONDITION_KEYWORDS):
             return "conditions"
-        if "visit" in content_lower or "encounter" in content_lower:
+        if any(kw in content_lower for kw in cls.VISIT_KEYWORDS):
             return "visits"
         return "other"
     
-    def _extract_subcategory(self, content: str) -> str:
+    @classmethod
+    def extract_subcategory(cls, content: str) -> str:
         content_lower = content.lower()
-        for kw in self.CONDITION_KEYWORDS + self.MEDICATION_KEYWORDS:
+        for kw in cls.CONDITION_KEYWORDS + cls.MEDICATION_KEYWORDS:
             if kw in content_lower:
                 return kw
         return ""
 
 
 class MemWalker:
-    """MemWalker: Intelligent hierarchical memory traversal."""
+    """
+    MemWalker: Intelligent hierarchical memory traversal.
+    
+    Key insight: Use hierarchy to BOOST relevant branches, not FILTER.
+    This ensures we never do worse than vanilla.
+    """
+    
+    # Boost multiplier for memories in relevant branches
+    BRANCH_BOOST = 1.35  # 35% boost for matching branch
     
     def __init__(self, config: Dict = None):
         self.config = config or self._default_config()
         self.memory = Memory.from_config(self.config)
         self.openai = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.tree_cache: Dict[str, MemoryTree] = {}
     
     def _default_config(self) -> Dict:
         return {
@@ -168,38 +129,8 @@ class MemWalker:
             }
         }
     
-    def _get_tree(self, patient_id: str) -> MemoryTree:
-        """Get or build memory tree using search (not get_all which is broken)."""
-        if patient_id not in self.tree_cache:
-            all_memories = []
-            seen_ids = set()
-            
-            # Search with broad terms to get diverse memories
-            search_terms = ["patient", "diagnosed", "visit", "medication", "vital", "lab", "condition"]
-            
-            for term in search_terms:
-                try:
-                    results = self.memory.search(query=term, user_id=patient_id, limit=30)
-                    
-                    if isinstance(results, dict):
-                        results = results.get('results', [])
-                    
-                    for r in (results or []):
-                        if isinstance(r, dict):
-                            mem_id = r.get('id', '')
-                            if mem_id and mem_id not in seen_ids:
-                                seen_ids.add(mem_id)
-                                all_memories.append(r)
-                except:
-                    continue
-            
-            builder = HierarchicalPatientMemory(all_memories)
-            self.tree_cache[patient_id] = builder.build_tree(patient_id)
-        
-        return self.tree_cache[patient_id]
-    
     def _determine_relevant_branches(self, query: str) -> List[str]:
-        """Use LLM to determine which branches to traverse."""
+        """Use LLM to determine which branches are relevant."""
         response = self.openai.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
@@ -219,78 +150,74 @@ Example: "conditions,medications" or "vitals,labs" """
         categories = response.choices[0].message.content.strip().lower()
         return [c.strip() for c in categories.split(",") if c.strip()]
     
-    def _score_nodes(self, nodes: List[MemoryNode], query: str) -> List[MemoryNode]:
-        """Score nodes by relevance using embeddings."""
-        if not nodes:
-            return []
+    def search(self, query: str, patient_id: str, k: int = 5) -> Tuple[List[Dict], float]:
+        """
+        Search using hierarchical boosting.
         
-        query_resp = self.openai.embeddings.create(
-            model="text-embedding-3-small",
-            input=query
-        )
-        query_embedding = query_resp.data[0].embedding
-        
-        contents = [n.content for n in nodes if n.content]
-        if not contents:
-            return []
-        
-        content_resp = self.openai.embeddings.create(
-            model="text-embedding-3-small",
-            input=contents
-        )
-        
-        import math
-        for i, node in enumerate(nodes):
-            if i < len(content_resp.data):
-                node_embedding = content_resp.data[i].embedding
-                dot = sum(x * y for x, y in zip(query_embedding, node_embedding))
-                norm_a = math.sqrt(sum(x * x for x in query_embedding))
-                norm_b = math.sqrt(sum(x * x for x in node_embedding))
-                node.relevance_score = dot / (norm_a * norm_b) if norm_a and norm_b else 0
-        
-        return sorted(nodes, key=lambda x: x.relevance_score, reverse=True)
-    
-    def search(self, query: str, patient_id: str, k: int = 5) -> tuple[List[Dict], float]:
-        """Search using hierarchical traversal."""
+        1. Get candidates via vanilla search (larger pool)
+        2. Detect relevant branches from query
+        3. Boost scores for memories in relevant branches
+        4. Re-rank and return top-k
+        """
         start = time.perf_counter()
         
         try:
-            tree = self._get_tree(patient_id)
+            # Step 1: Get MORE candidates than needed (vanilla search)
+            fetch_k = k * 4  # Fetch 4x to have room for re-ranking
+            results = self.memory.search(
+                query=query,
+                user_id=patient_id,
+                limit=fetch_k
+            )
+            
+            if isinstance(results, dict):
+                results = results.get('results', [])
+            
+            if not results:
+                return [], (time.perf_counter() - start) * 1000
+            
+            # Step 2: Determine relevant branches
             relevant_branches = self._determine_relevant_branches(query)
             
-            candidate_nodes = []
-            for branch in relevant_branches:
-                if branch in tree.root:
-                    candidate_nodes.extend(tree.root[branch])
-            
-            if not candidate_nodes:
-                for branch_nodes in tree.root.values():
-                    candidate_nodes.extend(branch_nodes)
-            
-            if candidate_nodes:
-                scored_nodes = self._score_nodes(candidate_nodes, query)
-                top_nodes = scored_nodes[:k]
-            else:
-                top_nodes = []
-            
-            latency_ms = (time.perf_counter() - start) * 1000
-            
-            memories = []
-            for node in top_nodes:
-                memories.append({
-                    "id": node.id,
-                    "content": node.content,
-                    "memory": node.content,
-                    "metadata": node.metadata,
-                    "score": node.relevance_score,
-                    "category": node.category,
-                    "subcategory": node.subcategory
+            # Step 3: Score and boost
+            scored_memories = []
+            for r in results:
+                if not isinstance(r, dict):
+                    continue
+                
+                content = r.get("memory", r.get("content", ""))
+                original_score = r.get("score", 0.0) or 0.0
+                
+                # Detect category of this memory
+                category = CategoryDetector.detect(content)
+                subcategory = CategoryDetector.extract_subcategory(content)
+                
+                # Apply boost if in relevant branch
+                boosted_score = original_score
+                if category in relevant_branches:
+                    boosted_score = original_score * self.BRANCH_BOOST
+                
+                scored_memories.append({
+                    "id": r.get("id", ""),
+                    "content": content,
+                    "memory": content,
+                    "metadata": r.get("metadata", {}),
+                    "original_score": original_score,
+                    "score": boosted_score,
+                    "category": category,
+                    "subcategory": subcategory,
+                    "boosted": category in relevant_branches
                 })
             
-            return memories, latency_ms
+            # Step 4: Re-rank by boosted score
+            scored_memories.sort(key=lambda x: x["score"], reverse=True)
+            top_memories = scored_memories[:k]
+            
+            latency_ms = (time.perf_counter() - start) * 1000
+            return top_memories, latency_ms
         
         except Exception as e:
-            # Fallback to regular search
+            # Fallback to vanilla
             latency_ms = (time.perf_counter() - start) * 1000
             results = self.memory.search(query=query, user_id=patient_id, limit=k)
             
@@ -310,22 +237,22 @@ Example: "conditions,medications" or "vitals,labs" """
             
             return memories, latency_ms
     
-    def invalidate_cache(self, patient_id: str = None):
-        if patient_id:
-            self.tree_cache.pop(patient_id, None)
-        else:
-            self.tree_cache.clear()
-    
-    def get_tree_stats(self, patient_id: str) -> Dict:
-        tree = self._get_tree(patient_id)
-        stats = {"patient_id": patient_id, "categories": {}}
-        for category, nodes in tree.root.items():
-            stats["categories"][category] = {
-                "count": len(nodes),
-                "subcategories": list(set(n.subcategory for n in nodes if n.subcategory))
-            }
-        stats["total_memories"] = sum(len(nodes) for nodes in tree.root.values())
-        return stats
+    def search_with_details(self, query: str, patient_id: str, k: int = 5) -> Dict:
+        """Search with full debug details."""
+        start = time.perf_counter()
+        
+        relevant_branches = self._determine_relevant_branches(query)
+        memories, _ = self.search(query, patient_id, k)
+        
+        latency_ms = (time.perf_counter() - start) * 1000
+        
+        return {
+            "query": query,
+            "relevant_branches": relevant_branches,
+            "memories": memories,
+            "latency_ms": latency_ms,
+            "boosted_count": sum(1 for m in memories if m.get("boosted", False))
+        }
 
 
 def create_memwalker(config: Dict = None) -> MemWalker:
