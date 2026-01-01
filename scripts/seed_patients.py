@@ -18,7 +18,6 @@ except ImportError:
     print("ERROR: mem0 not installed. Run: pip install mem0ai")
     exit(1)
 
-
 DATA_DIR = Path(__file__).parent.parent / "data" / "processed"
 MEM0_RECORDS_FILE = DATA_DIR / "mem0_records.jsonl"
 
