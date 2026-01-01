@@ -1,13 +1,4 @@
-"""
-Seed patient data into Mem0.
 
-Reads mem0_records.jsonl and pushes to Mem0 memory system.
-
-Usage:
-    python seed_patients.py                    # All records
-    python seed_patients.py --limit 100        # First 100 records
-    python seed_patients.py --patient-id UUID  # Single patient
-"""
 
 import json
 import asyncio
