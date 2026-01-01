@@ -87,6 +87,10 @@ class WithReranker(RetrievalStrategy):
         # Stage 1: Dense retrieval (get more candidates)
         results = self.memory.search(query=query, user_id=patient_id, limit=k * 4)
         
+        # Handle Mem0 response format {'results': [...]}
+        if isinstance(results, dict):
+            results = results.get('results', [])
+        
         if not results:
             return [], (time.perf_counter() - start) * 1000
         

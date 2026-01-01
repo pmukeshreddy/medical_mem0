@@ -71,14 +71,19 @@ class VanillaDense(RetrievalStrategy):
         
         latency_ms = (time.perf_counter() - start) * 1000
         
+        # Handle Mem0 response format {'results': [...]}
+        if isinstance(results, dict):
+            results = results.get('results', [])
+        
         # Normalize format
         memories = []
         for r in (results or []):
-            memories.append({
-                "id": r.get("id", ""),
-                "content": r.get("memory", r.get("content", "")),
-                "metadata": r.get("metadata", {}),
-                "score": r.get("score")
-            })
+            if isinstance(r, dict):
+                memories.append({
+                    "id": r.get("id", ""),
+                    "content": r.get("memory", r.get("content", "")),
+                    "metadata": r.get("metadata", {}),
+                    "score": r.get("score")
+                })
         
         return memories, latency_ms

@@ -72,6 +72,10 @@ class HybridBM25(RetrievalStrategy):
         # Get more candidates for reranking
         results = self.memory.search(query=query, user_id=patient_id, limit=k * 3)
         
+        # Handle Mem0 response format {'results': [...]}
+        if isinstance(results, dict):
+            results = results.get('results', [])
+        
         if not results:
             return [], (time.perf_counter() - start) * 1000
         

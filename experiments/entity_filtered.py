@@ -109,6 +109,10 @@ class EntityFiltered(RetrievalStrategy):
         # Get candidates
         results = self.memory.search(query=enhanced_query, user_id=patient_id, limit=k * 2)
         
+        # Handle Mem0 response format {'results': [...]}
+        if isinstance(results, dict):
+            results = results.get('results', [])
+        
         if not results:
             return [], (time.perf_counter() - start) * 1000
         
