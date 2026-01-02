@@ -21,6 +21,9 @@ from mem0 import Memory
 from openai import OpenAI
 
 
+
+
+
 class LLMMedicalExpander:
     """
     LLM-based medical term expansion.
@@ -41,17 +44,21 @@ class LLMMedicalExpander:
             model="gpt-4o-mini",
             messages=[{
                 "role": "system",
-                "content": """Extract medical concepts from the query and provide clinical synonyms/abbreviations.
+                "content": """Extract ALL medical concepts from the query and provide clinical synonyms/abbreviations.
+
+IMPORTANT: Cover EVERY medical aspect mentioned, not just one part.
 
 Return ONLY a comma-separated list of terms that would appear in clinical notes.
-Focus on: abbreviations, measurement units, clinical terminology, ICD/SNOMED-style terms.
+Focus on: vital signs, lab values, measurements, conditions, medications, abbreviations.
 
 Examples:
+- "overall health status" → vital signs, BP, systolic, diastolic, heart rate, BMI, weight, height, respiratory
 - "blood pressure" → systolic, diastolic, BP, mmHg, hypertension, HTN
-- "kidney function" → renal, creatinine, eGFR, GFR, CKD, BUN, nephro
-- "heart problems" → cardiac, cardiovascular, CHF, arrhythmia, EKG, ECG
+- "kidney function" → renal, creatinine, eGFR, GFR, CKD, BUN
+- "oral health" → dental, gingivitis, periodontal, caries
 
-Keep it to 8-10 most relevant terms. No explanations."""
+For queries with multiple concepts, include terms for ALL of them.
+Keep it to 12-15 most relevant terms. No explanations."""
             }, {
                 "role": "user",
                 "content": query
@@ -417,7 +424,7 @@ class AdvancedMedicalRetriever:
             
             # Stage 2: Retrieve from all queries
             all_results = []
-            fetch_per_query = k * 2
+            fetch_per_query = k * 4
             
             for q_name, q_text in queries.items():
                 results = self.memory.search(
@@ -524,6 +531,30 @@ class BalancedMedicalRetriever(AdvancedMedicalRetriever):
             use_adaptive=False,
             fast_mode=False
         )
+
+
+class ExpandedOnlyRetriever(AdvancedMedicalRetriever):
+    """Just LLM expansion, no RRF dilution."""
+    
+    name = "expanded_only"
+    description = "LLM medical expansion only (no RRF)"
+    
+    def __init__(self, config: Dict = None):
+        super().__init__(config=config, use_query2doc=False, use_stepback=False, 
+                         use_verification=False, use_adaptive=False, fast_mode=True)
+    
+    def search(self, query: str, patient_id: str, k: int = 5) -> Tuple[List[Dict], float]:
+        start = time.perf_counter()
+        
+        # Just expand and search
+        expansions = self.entity_expander.expand(query)
+        expanded_query = f"{query} {' '.join(expansions)}"
+        
+        results = self.memory.search(query=expanded_query, user_id=patient_id, limit=k)
+        results = self._normalize_results(results)
+        
+        latency_ms = (time.perf_counter() - start) * 1000
+        return results, latency_ms
 
 
 # Export for strategy registry
