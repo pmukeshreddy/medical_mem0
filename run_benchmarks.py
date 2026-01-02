@@ -151,11 +151,29 @@ def print_results_table(results):
         print(f"Improvement over vanilla: +{improvement:.1f}%")
 
 
+def filter_empty_cases(cases, strategy_factory):
+    """Filter out cases where strategy returns 0 results."""
+    print("\n  Filtering empty cases...")
+    strategy = strategy_factory()
+    valid_cases = []
+    for case in cases:
+        try:
+            memories, _ = strategy.search(case["query"], case["patient_id"], k=5)
+            if isinstance(memories, dict):
+                memories = memories.get('results', [])
+            if len(memories) > 0:
+                valid_cases.append(case)
+        except:
+            pass
+    return valid_cases
+
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--strategies", nargs="+", default=None)
     parser.add_argument("--limit", type=int, default=None)
     parser.add_argument("--list", action="store_true")
+    parser.add_argument("--filter-empty", action="store_true", help="Filter out cases with 0 results")
     args = parser.parse_args()
     
     all_strategies = get_all_strategies()
@@ -171,6 +189,10 @@ def main():
     
     cases = load_gold_dataset()
     print(f"\nLoaded {len(cases)} cases")
+    
+    if args.filter_empty:
+        cases = filter_empty_cases(cases, all_strategies["vanilla"])
+        print(f"After filtering empty: {len(cases)} cases")
     
     strategy_names = args.strategies or list(all_strategies.keys())
     print(f"Strategies: {strategy_names}")
