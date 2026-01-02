@@ -24,6 +24,7 @@ interface Message {
 
 export default function ChatPage() {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [patientSearch, setPatientSearch] = useState('');
   const [selectedPatient, setSelectedPatient] = useState('');
   const [selectedStrategy, setSelectedStrategy] = useState('vanilla');
   const [messages, setMessages] = useState<Message[]>([]);
@@ -32,11 +33,16 @@ export default function ChatPage() {
   const [loadingPatients, setLoadingPatients] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
+  // Filter patients based on search
+  const filteredPatients = patients.filter((p) =>
+    p.name.toLowerCase().includes(patientSearch.toLowerCase())
+  );
+
   // Fetch patients on mount
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await fetch(`${API_URL}/patients`);
+        const response = await fetch(`${API_URL}/patients?limit=100`);
         if (response.ok) {
           const data = await response.json();
           setPatients(data);
@@ -129,27 +135,36 @@ export default function ChatPage() {
             <label className="block text-xs font-medium text-gray-500 mb-1">
               Patient
             </label>
-            <select
-              value={selectedPatient}
-              onChange={(e) => {
-                setSelectedPatient(e.target.value);
-                handleClear();
-              }}
-              className="border rounded-lg px-3 py-1.5 text-sm"
-              disabled={loadingPatients}
-            >
-              {loadingPatients ? (
-                <option>Loading...</option>
-              ) : patients.length === 0 ? (
-                <option>No patients found</option>
-              ) : (
-                patients.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name}
-                  </option>
-                ))
-              )}
-            </select>
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={patientSearch}
+                onChange={(e) => setPatientSearch(e.target.value)}
+                placeholder="Search patients..."
+                className="border rounded-lg px-3 py-1.5 text-sm w-32"
+              />
+              <select
+                value={selectedPatient}
+                onChange={(e) => {
+                  setSelectedPatient(e.target.value);
+                  handleClear();
+                }}
+                className="border rounded-lg px-3 py-1.5 text-sm"
+                disabled={loadingPatients}
+              >
+                {loadingPatients ? (
+                  <option>Loading...</option>
+                ) : filteredPatients.length === 0 ? (
+                  <option>No patients found</option>
+                ) : (
+                  filteredPatients.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name}
+                    </option>
+                  ))
+                )}
+              </select>
+            </div>
           </div>
 
           <div>
@@ -189,7 +204,7 @@ export default function ChatPage() {
               <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
               <p>Start a conversation about the patient</p>
               <p className="text-sm mt-2">
-                Try: "Does this patient have diabetes?" or "What medications are they on?"
+              Try: "Does this patient have diabetes?" or "What medications are they on?"
               </p>
             </div>
           )}
