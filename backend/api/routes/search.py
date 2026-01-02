@@ -20,10 +20,7 @@ async def search_memories(
     
     Strategies:
     - vanilla: Basic dense vector search
-    - hybrid: BM25 + dense fusion
-    - temporal: Boost recent memories
-    - entity: Medical entity filtering
-    - rerank: With Cohere reranker (if configured)
+    - enhanced: LLM medical term expansion
     """
     memories, latency_ms = memory.search(
         patient_id=request.patient_id,
@@ -50,7 +47,7 @@ async def compare_strategies(
     Compare all retrieval strategies for the same query.
     Useful for benchmarking.
     """
-    strategies = ["vanilla", "hybrid", "temporal", "entity"]
+    strategies = ["vanilla", "enhanced"]
     results = {}
     
     for strategy in strategies:

@@ -1,11 +1,10 @@
 'use client';
 
-import { useState } from 'react';
-import { Search, Plus, Loader2, Clock, Zap } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Send, Loader2, User, Bot, FileText } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-// Sample patients (loaded from backend in production)
 const SAMPLE_PATIENTS = [
   { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor21 Haley279' },
   { id: 'patient_1', name: 'Patient 1' },
@@ -13,129 +12,108 @@ const SAMPLE_PATIENTS = [
 ];
 
 const STRATEGIES = [
-  { id: 'vanilla', name: 'Vanilla', description: 'Basic dense search' },
-  { id: 'hybrid', name: 'Hybrid BM25', description: 'BM25 + dense fusion' },
-  { id: 'temporal', name: 'Temporal', description: 'Time decay boost' },
-  { id: 'entity', name: 'Entity', description: 'Medical entity filter' },
+  { id: 'vanilla', name: 'Vanilla' },
+  { id: 'enhanced', name: 'Enhanced' },
 ];
 
-interface Memory {
-  id: string;
+interface Message {
+  role: 'user' | 'assistant';
   content: string;
-  memory?: string;
-  score?: number;
-  metadata?: {
-    date?: string;
-    encounter_type?: string;
-  };
+  memories?: Array<{ content: string; memory?: string }>;
+  latency_ms?: number;
 }
 
-interface StrategyResult {
-  strategy: string;
-  memories: Memory[];
-  latency_ms: number;
-  loading?: boolean;
-  error?: string;
-}
-
-export default function Home() {
+export default function ChatPage() {
   const [selectedPatient, setSelectedPatient] = useState(SAMPLE_PATIENTS[0].id);
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<StrategyResult[]>([]);
+  const [selectedStrategy, setSelectedStrategy] = useState('vanilla');
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [newMemory, setNewMemory] = useState('');
-  const [addingMemory, setAddingMemory] = useState(false);
-  const [showAddMemory, setShowAddMemory] = useState(false);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleSearch = async () => {
-    if (!query.trim()) return;
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+
+  const handleSend = async () => {
+    if (!input.trim() || loading) return;
+
+    const userMessage = input.trim();
+    setInput('');
+    setMessages((prev) => [...prev, { role: 'user', content: userMessage }]);
     setLoading(true);
-    setResults(STRATEGIES.map(s => ({ strategy: s.id, memories: [], latency_ms: 0, loading: true })));
 
-    // Run all strategies in parallel
-    const promises = STRATEGIES.map(async (strategy) => {
-      try {
-        const response = await fetch(`${API_URL}/search`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            patient_id: selectedPatient,
-            query: query,
-            limit: 5,
-            strategy: strategy.id,
-          }),
-        });
+    try {
+      const response = await fetch(`${API_URL}/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          patient_id: selectedPatient,
+          message: userMessage,
+          history: messages.map((m) => ({ role: m.role, content: m.content })),
+          strategy: selectedStrategy,
+        }),
+      });
 
-        if (!response.ok) throw new Error('Search failed');
+      if (!response.ok) throw new Error('Chat failed');
 
-        const data = await response.json();
-        return {
-          strategy: strategy.id,
-          memories: data.memories || [],
-          latency_ms: data.latency_ms || 0,
-        };
-      } catch (error) {
-        return {
-          strategy: strategy.id,
-          memories: [],
-          latency_ms: 0,
-          error: 'Failed to fetch',
-        };
-      }
-    });
+      const data = await response.json();
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: data.response,
+          memories: data.memories_used,
+          latency_ms: data.latency_ms,
+        },
+      ]);
+    } catch (error) {
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: 'Sorry, I encountered an error. Please try again.',
+        },
+      ]);
+    }
 
-    const strategyResults = await Promise.all(promises);
-    setResults(strategyResults);
     setLoading(false);
   };
 
-  const handleAddMemory = async () => {
-    if (!newMemory.trim()) return;
-
-    setAddingMemory(true);
-    try {
-      const response = await fetch(`${API_URL}/patients/${selectedPatient}/memories`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newMemory }),
-      });
-
-      if (response.ok) {
-        setNewMemory('');
-        setShowAddMemory(false);
-        alert('Memory added successfully!');
-      }
-    } catch (error) {
-      alert('Failed to add memory');
-    }
-    setAddingMemory(false);
+  const handleClear = () => {
+    setMessages([]);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
+    <div className="max-w-4xl mx-auto px-4 py-8">
       {/* Header */}
-      <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          MedMem0 - Retrieval Strategy Comparison
+      <div className="text-center mb-6">
+        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+          Chat with Patient Memory
         </h1>
-        <p className="text-gray-600">
-          Compare different memory retrieval strategies for longitudinal patient data
+        <p className="text-gray-600 text-sm">
+          Ask questions about the patient using memory-augmented retrieval
         </p>
       </div>
 
-      {/* Search Section */}
-      <div className="bg-white rounded-lg shadow-sm border p-6 mb-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
-          {/* Patient Select */}
+      {/* Controls */}
+      <div className="bg-white rounded-lg shadow-sm border p-4 mb-4">
+        <div className="flex flex-wrap gap-4 items-center">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-xs font-medium text-gray-500 mb-1">
               Patient
             </label>
             <select
               value={selectedPatient}
-              onChange={(e) => setSelectedPatient(e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => {
+                setSelectedPatient(e.target.value);
+                handleClear();
+              }}
+              className="border rounded-lg px-3 py-1.5 text-sm"
             >
               {SAMPLE_PATIENTS.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -145,152 +123,141 @@ export default function Home() {
             </select>
           </div>
 
-          {/* Query Input */}
-          <div className="md:col-span-2">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Query
+          <div>
+            <label className="block text-xs font-medium text-gray-500 mb-1">
+              Retrieval Strategy
             </label>
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-              placeholder="e.g., diabetes history, medications, blood pressure"
-              className="w-full border rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-            />
+            <select
+              value={selectedStrategy}
+              onChange={(e) => setSelectedStrategy(e.target.value)}
+              className="border rounded-lg px-3 py-1.5 text-sm"
+            >
+              {STRATEGIES.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          {/* Search Button */}
-          <div className="flex items-end">
+          <div className="ml-auto">
             <button
-              onClick={handleSearch}
-              disabled={loading || !query.trim()}
-              className="w-full bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:bg-gray-400 flex items-center justify-center gap-2"
+              onClick={handleClear}
+              className="text-sm text-gray-500 hover:text-gray-700"
             >
-              {loading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Search className="w-4 h-4" />
-              )}
-              Compare
+              Clear chat
             </button>
           </div>
         </div>
-
-        {/* Add Memory Toggle */}
-        <div className="border-t pt-4 mt-4">
-          <button
-            onClick={() => setShowAddMemory(!showAddMemory)}
-            className="text-sm text-blue-600 hover:text-blue-700 flex items-center gap-1"
-          >
-            <Plus className="w-4 h-4" />
-            {showAddMemory ? 'Hide' : 'Add new memory'}
-          </button>
-
-          {showAddMemory && (
-            <div className="mt-3 flex gap-2">
-              <input
-                type="text"
-                value={newMemory}
-                onChange={(e) => setNewMemory(e.target.value)}
-                placeholder="e.g., Patient started insulin therapy today..."
-                className="flex-1 border rounded-lg px-3 py-2 text-sm"
-              />
-              <button
-                onClick={handleAddMemory}
-                disabled={addingMemory || !newMemory.trim()}
-                className="bg-green-600 text-white rounded-lg px-4 py-2 text-sm hover:bg-green-700 disabled:bg-gray-400"
-              >
-                {addingMemory ? 'Adding...' : 'Add'}
-              </button>
-            </div>
-          )}
-        </div>
       </div>
 
-      {/* Results Grid */}
-      {results.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-          {STRATEGIES.map((strategy) => {
-            const result = results.find((r) => r.strategy === strategy.id);
-            const isLoading = result?.loading;
-            const memories = result?.memories || [];
+      {/* Chat Container */}
+      <div className="bg-white rounded-lg shadow-sm border flex flex-col h-[500px]">
+        {/* Messages */}
+        <div className="flex-1 overflow-y-auto p-4 space-y-4">
+          {messages.length === 0 && (
+            <div className="text-center text-gray-400 py-12">
+              <Bot className="w-12 h-12 mx-auto mb-4 opacity-50" />
+              <p>Start a conversation about the patient</p>
+              <p className="text-sm mt-2">
+                Try: "Does this patient have diabetes?" or "What medications are they on?"
+              </p>
+            </div>
+          )}
 
-            return (
-              <div
-                key={strategy.id}
-                className="bg-white rounded-lg shadow-sm border overflow-hidden"
-              >
-                {/* Strategy Header */}
-                <div className="bg-gray-50 px-4 py-3 border-b">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-gray-900">{strategy.name}</h3>
-                    {result && !isLoading && (
-                      <span className="flex items-center text-xs text-gray-500">
-                        <Clock className="w-3 h-3 mr-1" />
-                        {result.latency_ms.toFixed(0)}ms
-                      </span>
-                    )}
-                  </div>
-                  <p className="text-xs text-gray-500">{strategy.description}</p>
+          {messages.map((message, idx) => (
+            <div
+              key={idx}
+              className={`flex gap-3 ${
+                message.role === 'user' ? 'justify-end' : 'justify-start'
+              }`}
+            >
+              {message.role === 'assistant' && (
+                <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <Bot className="w-4 h-4 text-blue-600" />
                 </div>
+              )}
 
-                {/* Results */}
-                <div className="p-4 min-h-[300px]">
-                  {isLoading ? (
-                    <div className="flex items-center justify-center h-full">
-                      <Loader2 className="w-6 h-6 animate-spin text-blue-500" />
-                    </div>
-                  ) : result?.error ? (
-                    <div className="text-red-500 text-sm">{result.error}</div>
-                  ) : memories.length === 0 ? (
-                    <div className="text-gray-400 text-sm text-center">
-                      No results
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {memories.map((memory, idx) => (
-                        <div
-                          key={memory.id || idx}
-                          className="p-3 bg-gray-50 rounded-lg text-sm"
+              <div
+                className={`max-w-[80%] ${
+                  message.role === 'user'
+                    ? 'bg-blue-600 text-white rounded-lg px-4 py-2'
+                    : 'bg-gray-100 rounded-lg px-4 py-2'
+                }`}
+              >
+                <p className="text-sm">{message.content}</p>
+
+                {/* Show memories used */}
+                {message.memories && message.memories.length > 0 && (
+                  <div className="mt-3 pt-3 border-t border-gray-200">
+                    <p className="text-xs font-medium text-gray-500 mb-2 flex items-center gap-1">
+                      <FileText className="w-3 h-3" />
+                      Memories used:
+                    </p>
+                    <div className="space-y-1">
+                      {message.memories.slice(0, 3).map((mem, midx) => (
+                        <p
+                          key={midx}
+                          className="text-xs text-gray-600 bg-white rounded px-2 py-1"
                         >
-                          <p className="text-gray-800">
-                            {memory.content || memory.memory}
-                          </p>
-                          <div className="flex items-center gap-2 mt-2 text-xs text-gray-500">
-                            {memory.score && (
-                              <span className="flex items-center">
-                                <Zap className="w-3 h-3 mr-1" />
-                                {(memory.score * 100).toFixed(1)}%
-                              </span>
-                            )}
-                            {memory.metadata?.date && (
-                              <span>
-                                {new Date(memory.metadata.date).toLocaleDateString()}
-                              </span>
-                            )}
-                          </div>
-                        </div>
+                          {(mem.content || mem.memory || '').slice(0, 100)}...
+                        </p>
                       ))}
                     </div>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      )}
+                  </div>
+                )}
 
-      {/* Empty State */}
-      {results.length === 0 && (
-        <div className="text-center py-12 text-gray-500">
-          <Search className="w-12 h-12 mx-auto mb-4 opacity-50" />
-          <p>Enter a query and click Compare to see results</p>
-          <p className="text-sm mt-2">
-            Try: "diabetes", "medications", "blood pressure", "recent visits"
-          </p>
+                {message.latency_ms && (
+                  <p className="text-xs text-gray-400 mt-2">
+                    {message.latency_ms.toFixed(0)}ms
+                  </p>
+                )}
+              </div>
+
+              {message.role === 'user' && (
+                <div className="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center flex-shrink-0">
+                  <User className="w-4 h-4 text-gray-600" />
+                </div>
+              )}
+            </div>
+          ))}
+
+          {loading && (
+            <div className="flex gap-3">
+              <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center">
+                <Loader2 className="w-4 h-4 text-blue-600 animate-spin" />
+              </div>
+              <div className="bg-gray-100 rounded-lg px-4 py-2">
+                <p className="text-sm text-gray-500">Thinking...</p>
+              </div>
+            </div>
+          )}
+
+          <div ref={messagesEndRef} />
         </div>
-      )}
+
+        {/* Input */}
+        <div className="border-t p-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+              placeholder="Ask about the patient..."
+              className="flex-1 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              disabled={loading}
+            />
+            <button
+              onClick={handleSend}
+              disabled={loading || !input.trim()}
+              className="bg-blue-600 text-white rounded-lg px-4 py-2 hover:bg-blue-700 disabled:bg-gray-400"
+            >
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

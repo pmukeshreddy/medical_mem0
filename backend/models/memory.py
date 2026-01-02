@@ -24,7 +24,7 @@ class MemorySearch(BaseModel):
     patient_id: str
     query: str
     limit: int = 5
-    strategy: str = "vanilla"  # vanilla, hybrid, rerank, temporal, entity
+    strategy: str = "vanilla"  # vanilla, enhanced
 
 
 class MemorySearchResponse(BaseModel):
