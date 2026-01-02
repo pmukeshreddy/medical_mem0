@@ -33,11 +33,13 @@ def get_all_strategies():
         from research.advanced_retrieval import (
             AdvancedMedicalRetriever,
             FastMedicalRetriever,
-            BalancedMedicalRetriever
+            BalancedMedicalRetriever,
+            ExpandedOnlyRetriever
         )
         strategies['advanced'] = lambda: AdvancedMedicalRetriever()
         strategies['fast_medical'] = lambda: FastMedicalRetriever()
         strategies['balanced'] = lambda: BalancedMedicalRetriever()
+        strategies['expanded_only'] = lambda: ExpandedOnlyRetriever()
     except ImportError as e:
         print(f"Warning: Could not load advanced retrieval: {e}")
     

@@ -37,6 +37,9 @@ def test_strategy(strategy_name: str, query: str, patient_id: str, k: int = 5):
     if strategy_name == "vanilla":
         from experiments import get_strategy
         strategy = get_strategy("vanilla")
+    elif strategy_name == "expanded_only":
+        from research.advanced_retrieval import ExpandedOnlyRetriever
+        strategy = ExpandedOnlyRetriever()
     elif strategy_name == "colbert":
         from research.colbert_retrieval import ColBERTRetriever
         strategy = ColBERTRetriever()
@@ -94,7 +97,7 @@ def main():
     parser.add_argument("--query", type=str, help="Custom query")
     parser.add_argument("--patient", type=str, help="Patient ID for custom query")
     parser.add_argument("--strategies", nargs="+", 
-                        default=["vanilla", "colbert", "fast_medical"],
+                        default=["vanilla", "expanded_only"],
                         help="Strategies to compare")
     args = parser.parse_args()
     
