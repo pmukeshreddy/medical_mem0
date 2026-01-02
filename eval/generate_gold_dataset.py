@@ -1,188 +1,191 @@
 """
-Generate gold evaluation dataset v4 - THE RIGHT WAY.
+Gold Dataset Generator v5 - PROPER EVALUATION
 
 Approach:
-1. Query Pinecone with various questions
-2. See what ACTUALLY comes back  
-3. Extract keywords FROM the retrieved content
-4. Those become the ground truth
+1. Load SOURCE memories (ground truth)
+2. LLM generates HARD queries (no keyword overlap)
+3. Keywords from SOURCE memory
+4. Test if retrieval can find the source memory
 
-Usage:
-    python eval/generate_gold_dataset.py --n 50
+No circular logic.
 """
 
 import json
 import random
 import argparse
-import re
 import sys
 from pathlib import Path
-from typing import List, Dict, Set
+from typing import List, Dict, Tuple
+from openai import OpenAI
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 OUTPUT_DIR = Path(__file__).parent / "gold_dataset"
+DATA_DIR = Path(__file__).parent.parent / "data" / "processed"
 
-# Generic medical queries - we don't predefine keywords
-QUERIES = [
-    # Vitals
-    "What is the patient's blood pressure?",
-    "What are the patient's vital signs?",
-    "What is the patient's heart rate?",
-    "What is the patient's respiratory rate?",
-    "What is the patient's BMI?",
-    "What is the patient's weight?",
-    "What is the patient's temperature?",
-    
-    # Labs
-    "What are the patient's lab results?",
-    "What is the patient's glucose level?",
-    "What is the patient's hemoglobin?",
-    "What is the patient's cholesterol level?",
-    
-    # Conditions
-    "What conditions has the patient been diagnosed with?",
-    "What is the patient's diagnosis?",
-    "Does the patient have any chronic conditions?",
-    
-    # General
-    "What is the patient's medical history?",
-    "Summarize the patient's health status",
-]
-
-# Keywords to look for in retrieved content
+# Keywords to extract from memories
 KEYWORD_PATTERNS = [
     "blood pressure", "systolic", "diastolic",
     "heart rate", "respiratory", "temperature",
-    "weight", "bmi", "height",
+    "weight", "bmi", "height", "oxygen",
     "glucose", "hemoglobin", "cholesterol", "a1c",
-    "diagnosed", "diagnosis",
-    "pain", "oxygen",
+    "diagnosed", "diabetes", "hypertension",
+    "pain", "medication", "prescribed"
 ]
 
 
-def get_patient_ids(strategy) -> List[str]:
-    """Discover patient IDs from Pinecone."""
-    patient_ids = set()
+def load_source_memories() -> List[Dict]:
+    """Load memories from source files."""
+    memories = []
     
-    for term in ["blood pressure", "diagnosed", "heart rate", "glucose"]:
-        try:
-            results = strategy.memory.search(query=term, limit=100)
-            if isinstance(results, dict):
-                results = results.get('results', [])
-            
-            for r in results:
-                if isinstance(r, dict):
-                    uid = r.get('user_id') or r.get('metadata', {}).get('user_id')
-                    if uid:
-                        patient_ids.add(uid)
-        except:
-            continue
+    # Try mem0_records.jsonl
+    records_path = DATA_DIR / "mem0_records.jsonl"
+    if records_path.exists():
+        print(f"  Loading from: {records_path}")
+        with open(records_path) as f:
+            for line in f:
+                try:
+                    record = json.loads(line)
+                    if record.get("content") and record.get("user_id"):
+                        memories.append({
+                            "id": record.get("id", ""),
+                            "content": record["content"],
+                            "patient_id": record["user_id"],
+                            "metadata": record.get("metadata", {})
+                        })
+                except:
+                    continue
     
-    return list(patient_ids)
+    return memories
 
 
-def extract_keywords_from_content(content: str) -> List[str]:
-    """Extract actual keywords from retrieved content."""
+def extract_keywords(content: str) -> List[str]:
+    """Extract keywords from memory content."""
     content_lower = content.lower()
     found = []
-    
     for kw in KEYWORD_PATTERNS:
         if kw in content_lower and kw not in found:
             found.append(kw)
-    
     return found
 
 
+def generate_hard_query(memory_content: str, openai_client: OpenAI) -> str:
+    """Use LLM to generate a hard query that doesn't use exact words."""
+    
+    response = openai_client.chat.completions.create(
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "system",
+                "content": """You generate medical questions for retrieval testing.
+
+RULES:
+1. Generate a question that a doctor would ask to find this information
+2. DO NOT use the exact medical terms from the record
+3. Use synonyms, related terms, or broader categories
+4. Keep it natural and realistic
+
+Examples:
+- Record: "Systolic Blood Pressure: 120 mmHg" 
+  BAD: "What is the systolic blood pressure?"  (uses exact terms)
+  GOOD: "What are the cardiovascular readings?"
+
+- Record: "Diagnosed with Type 2 Diabetes"
+  BAD: "Does patient have diabetes?"  (uses exact term)
+  GOOD: "Any metabolic or endocrine conditions?"
+
+- Record: "Heart rate: 72 bpm"
+  BAD: "What is heart rate?"
+  GOOD: "What are the cardiac rhythm measurements?"
+"""
+            },
+            {
+                "role": "user", 
+                "content": f"Generate a hard query for this record:\n{memory_content}"
+            }
+        ],
+        temperature=0.7,
+        max_tokens=50
+    )
+    
+    return response.choices[0].message.content.strip().strip('"')
+
+
 def determine_category(keywords: List[str]) -> str:
-    """Determine category from found keywords."""
-    vitals = ["blood pressure", "systolic", "diastolic", "heart rate", "respiratory", "temperature", "weight", "bmi"]
+    """Determine category from keywords."""
+    vitals = ["blood pressure", "systolic", "diastolic", "heart rate", "respiratory", "temperature", "weight", "bmi", "oxygen"]
     labs = ["glucose", "hemoglobin", "cholesterol", "a1c"]
+    conditions = ["diagnosed", "diabetes", "hypertension"]
     
     if any(k in vitals for k in keywords):
         return "vitals"
     if any(k in labs for k in keywords):
         return "labs"
-    if "diagnosed" in keywords or "diagnosis" in keywords:
+    if any(k in conditions for k in keywords):
         return "conditions"
     return "general"
 
 
 def generate_gold_dataset(n_cases: int = 50) -> Dict:
-    """Generate gold dataset from actual Pinecone retrieval."""
-    from experiments import get_strategy
+    """Generate gold dataset with hard queries."""
     
-    print("Initializing...")
-    strategy = get_strategy('vanilla')
+    print("Loading source memories...")
+    memories = load_source_memories()
+    print(f"  Found {len(memories)} memories")
     
-    print("Discovering patients...")
-    patient_ids = get_patient_ids(strategy)
-    print(f"  Found {len(patient_ids)} patients")
-    
-    if not patient_ids:
-        print("ERROR: No patients found")
+    if not memories:
+        print("ERROR: No source memories found")
         return None
     
+    # Filter memories that have extractable keywords
+    valid_memories = []
+    for m in memories:
+        keywords = extract_keywords(m["content"])
+        if keywords:  # Only keep memories with keywords
+            m["keywords"] = keywords
+            valid_memories.append(m)
+    
+    print(f"  Memories with keywords: {len(valid_memories)}")
+    
+    if len(valid_memories) < n_cases:
+        print(f"WARNING: Only {len(valid_memories)} valid memories, reducing n_cases")
+        n_cases = len(valid_memories)
+    
+    # Sample memories
+    random.shuffle(valid_memories)
+    selected = valid_memories[:n_cases]
+    
+    # Generate hard queries
+    print(f"Generating {n_cases} hard queries with LLM...")
+    openai_client = OpenAI()
+    
     cases = []
-    case_id = 0
-    seen = set()  # Avoid duplicate (patient, query) pairs
-    
-    print(f"Generating {n_cases} cases from actual retrieval...")
-    
-    attempts = 0
-    max_attempts = n_cases * 20
-    
-    while case_id < n_cases and attempts < max_attempts:
-        attempts += 1
-        
-        patient_id = random.choice(patient_ids)
-        query = random.choice(QUERIES)
-        
-        key = (patient_id, query)
-        if key in seen:
+    for i, memory in enumerate(selected):
+        try:
+            hard_query = generate_hard_query(memory["content"], openai_client)
+            
+            cases.append({
+                "id": f"eval_{i:04d}",
+                "patient_id": memory["patient_id"],
+                "query": hard_query,
+                "expected_keywords": memory["keywords"],
+                "source_content": memory["content"][:200],
+                "source_memory_id": memory["id"],
+                "category": determine_category(memory["keywords"]),
+                "difficulty": "hard"
+            })
+            
+            if (i + 1) % 10 == 0:
+                print(f"  Progress: {i + 1}/{n_cases}")
+                
+        except Exception as e:
+            print(f"  Error on {i}: {e}")
             continue
-        seen.add(key)
-        
-        # Step 1: Query Pinecone
-        memories, _ = strategy.search(query=query, patient_id=patient_id, k=5)
-        
-        if not memories:
-            continue
-        
-        # Step 2: Get what ACTUALLY came back
-        top_content = memories[0].get('content', memories[0].get('memory', ''))
-        
-        if not top_content or len(top_content) < 10:
-            continue
-        
-        # Step 3: Extract keywords FROM the content
-        keywords = extract_keywords_from_content(top_content)
-        
-        if not keywords:
-            continue
-        
-        # Step 4: This is now ground truth
-        cases.append({
-            "id": f"eval_{case_id:04d}",
-            "patient_id": patient_id,
-            "query": query,
-            "expected_keywords": keywords,  # FROM retrieval, not predefined
-            "expected_content_snippet": top_content[:200],
-            "category": determine_category(keywords),
-            "difficulty": "medium",
-        })
-        
-        case_id += 1
-        
-        if case_id % 10 == 0:
-            print(f"  Progress: {case_id}/{n_cases}")
-    
-    print(f"  Generated {len(cases)} cases")
     
     dataset = {
         "metadata": {
-            "version": "4.0",
-            "description": "Gold dataset v4 - keywords extracted from actual retrieval",
+            "version": "5.0",
+            "description": "Gold dataset v5 - LLM-generated hard queries, source-based keywords",
             "total_cases": len(cases),
             "total_patients": len(set(c["patient_id"] for c in cases)),
             "categories": list(set(c["category"] for c in cases))
@@ -202,7 +205,7 @@ def main():
     
     random.seed(args.seed)
     
-    print("=== Gold Dataset Generator v4 ===\n")
+    print("=== Gold Dataset Generator v5 ===\n")
     
     dataset = generate_gold_dataset(args.n)
     
@@ -218,14 +221,12 @@ def main():
     print(f"\n=== Done ===")
     print(f"Output: {output_file}")
     
-    keyword_counts = [len(c["expected_keywords"]) for c in dataset["cases"]]
-    print(f"Keywords per case: min={min(keyword_counts)}, max={max(keyword_counts)}, avg={sum(keyword_counts)/len(keyword_counts):.1f}")
-    
+    # Show samples
     print("\n--- Sample Cases ---")
     for case in dataset["cases"][:3]:
-        print(f"  Q: {case['query']}")
+        print(f"  Source: {case['source_content'][:60]}...")
+        print(f"  Query:  {case['query']}")
         print(f"  Keywords: {case['expected_keywords']}")
-        print(f"  Content: {case['expected_content_snippet'][:80]}...")
         print()
 
 

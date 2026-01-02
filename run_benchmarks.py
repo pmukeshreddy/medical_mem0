@@ -23,22 +23,10 @@ def get_all_strategies():
         strategies[name] = lambda n=name: get_strategy(n)
     
     try:
-        from research.hyde_retrieval import HyDERetrieval
-        strategies['hyde'] = lambda: HyDERetrieval()
+        from research.rag_fusion import RAGFusion
+        strategies['rag_fusion'] = lambda: RAGFusion()
     except ImportError as e:
-        print(f"Warning: Could not load HyDE: {e}")
-    
-    try:
-        from research.memwalker import MemWalker
-        strategies['memwalker'] = lambda: MemWalker()
-    except ImportError as e:
-        print(f"Warning: Could not load MemWalker: {e}")
-    
-    try:
-        from research.temporal_attention import TemporalAttentionRetriever
-        strategies['temporal_attn'] = lambda: TemporalAttentionRetriever()
-    except ImportError as e:
-        print(f"Warning: Could not load TemporalAttention: {e}")
+        print(f"Warning: Could not load RAGFusion: {e}")
     
     return strategies
 
