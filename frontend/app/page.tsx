@@ -5,16 +5,15 @@ import { Send, Loader2, User, Bot, FileText } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-const SAMPLE_PATIENTS = [
-  { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor21 Haley279' },
-  { id: 'patient_1', name: 'Patient 1' },
-  { id: 'patient_2', name: 'Patient 2' },
-];
-
 const STRATEGIES = [
   { id: 'vanilla', name: 'Vanilla' },
   { id: 'enhanced', name: 'Enhanced' },
 ];
+
+interface Patient {
+  id: string;
+  name: string;
+}
 
 interface Message {
   role: 'user' | 'assistant';
@@ -24,12 +23,35 @@ interface Message {
 }
 
 export default function ChatPage() {
-  const [selectedPatient, setSelectedPatient] = useState(SAMPLE_PATIENTS[0].id);
+  const [patients, setPatients] = useState<Patient[]>([]);
+  const [selectedPatient, setSelectedPatient] = useState('');
   const [selectedStrategy, setSelectedStrategy] = useState('vanilla');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
+  const [loadingPatients, setLoadingPatients] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Fetch patients on mount
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        const response = await fetch(`${API_URL}/patients`);
+        if (response.ok) {
+          const data = await response.json();
+          setPatients(data);
+          if (data.length > 0) {
+            setSelectedPatient(data[0].id);
+          }
+        }
+      } catch (error) {
+        console.error('Failed to fetch patients:', error);
+      } finally {
+        setLoadingPatients(false);
+      }
+    };
+    fetchPatients();
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -40,7 +62,7 @@ export default function ChatPage() {
   }, [messages]);
 
   const handleSend = async () => {
-    if (!input.trim() || loading) return;
+    if (!input.trim() || loading || !selectedPatient) return;
 
     const userMessage = input.trim();
     setInput('');
@@ -114,12 +136,19 @@ export default function ChatPage() {
                 handleClear();
               }}
               className="border rounded-lg px-3 py-1.5 text-sm"
+              disabled={loadingPatients}
             >
-              {SAMPLE_PATIENTS.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name}
-                </option>
-              ))}
+              {loadingPatients ? (
+                <option>Loading...</option>
+              ) : patients.length === 0 ? (
+                <option>No patients found</option>
+              ) : (
+                patients.map((p) => (
+                  <option key={p.id} value={p.id}>
+                    {p.name}
+                  </option>
+                ))
+              )}
             </select>
           </div>
 
@@ -243,7 +272,12 @@ export default function ChatPage() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleSend()}
+                            onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  handleSend();
+                }
+              }}
               placeholder="Ask about the patient..."
               className="flex-1 border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               disabled={loading}
