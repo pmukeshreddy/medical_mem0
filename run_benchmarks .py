@@ -22,11 +22,31 @@ def get_all_strategies():
     for name in EXP_STRATEGIES:
         strategies[name] = lambda n=name: get_strategy(n)
     
+    # Research strategies
     try:
         from research.rag_fusion import RAGFusion
         strategies['rag_fusion'] = lambda: RAGFusion()
     except ImportError as e:
         print(f"Warning: Could not load RAGFusion: {e}")
+    
+    try:
+        from research.advanced_retrieval import (
+            AdvancedMedicalRetriever,
+            FastMedicalRetriever,
+            BalancedMedicalRetriever
+        )
+        strategies['advanced'] = lambda: AdvancedMedicalRetriever()
+        strategies['fast_medical'] = lambda: FastMedicalRetriever()
+        strategies['balanced'] = lambda: BalancedMedicalRetriever()
+    except ImportError as e:
+        print(f"Warning: Could not load advanced retrieval: {e}")
+    
+    try:
+        from research.colbert_retrieval import ColBERTRetriever, HybridColBERTBM25
+        strategies['colbert'] = lambda: ColBERTRetriever()
+        strategies['hybrid_colbert'] = lambda: HybridColBERTBM25()
+    except ImportError as e:
+        print(f"Warning: Could not load ColBERT: {e}")
     
     return strategies
 

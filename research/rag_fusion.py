@@ -199,21 +199,25 @@ Return ONLY the questions, one per line, no numbering."""
             
             return memories, latency_ms
     
-    def search_with_details(self, query: str, patient_id: str, k: int = 5) -> Dict:
-        """Search with debug details."""
+    def search_with_details(self, query: str, patient_id: str, k: int = 5) -> Tuple[Dict, float]:
+        """Search with full debug info. Returns (details_dict, latency_ms)."""
         start = time.perf_counter()
         
         variants = self._expand_query(query)
-        results, _ = self.search(query, patient_id, k)
+        hyde_doc = self._generate_hyde(query) if self.use_hyde else None
+        results, search_latency = self.search(query, patient_id, k)
         
-        latency_ms = (time.perf_counter() - start) * 1000
+        total_latency = (time.perf_counter() - start) * 1000
         
-        return {
+        details = {
             "original_query": query,
             "variants": variants,
+            "hyde_document": hyde_doc,
             "results": results,
-            "latency_ms": latency_ms
         }
+        
+        return details, total_latency
+
 
 
 def create_rag_fusion(config: Dict = None, num_variants: int = 3) -> RAGFusion:
