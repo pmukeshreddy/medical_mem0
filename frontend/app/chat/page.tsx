@@ -6,7 +6,7 @@ import { Send, Loader2, User, Bot, FileText } from 'lucide-react';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const SAMPLE_PATIENTS = [
-  { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor Haley' },
+  { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor21 Haley279' },
   { id: 'patient_1', name: 'Patient 1' },
   { id: 'patient_2', name: 'Patient 2' },
 ];

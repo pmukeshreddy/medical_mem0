@@ -5,9 +5,6 @@ import { Send, Loader2, User, Bot, FileText } from 'lucide-react';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
-// Strip Synthea-generated numbers from names (e.g., "Victor265 Lindgren255" -> "Victor Lindgren")
-const cleanName = (name: string) => name.replace(/\d+/g, '').trim().replace(/\s+/g, ' ');
-
 const STRATEGIES = [
   { id: 'vanilla', name: 'Vanilla' },
   { id: 'enhanced', name: 'Enhanced' },
@@ -36,10 +33,9 @@ export default function ChatPage() {
   const [loadingPatients, setLoadingPatients] = useState(true);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Filter patients based on search (matches both original and cleaned names)
+  // Filter patients based on search
   const filteredPatients = patients.filter((p) =>
-    p.name.toLowerCase().includes(patientSearch.toLowerCase()) ||
-    cleanName(p.name).toLowerCase().includes(patientSearch.toLowerCase())
+    p.name.toLowerCase().includes(patientSearch.toLowerCase())
   );
 
   // Fetch patients on mount
@@ -163,7 +159,7 @@ export default function ChatPage() {
                 ) : (
                   filteredPatients.map((p) => (
                     <option key={p.id} value={p.id}>
-                      {cleanName(p.name)}
+                      {p.name}
                     </option>
                   ))
                 )}
