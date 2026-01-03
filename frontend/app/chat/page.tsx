@@ -6,16 +6,14 @@ import { Send, Loader2, User, Bot, FileText } from 'lucide-react';
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
 
 const SAMPLE_PATIENTS = [
-  { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor21 Haley279' },
+  { id: '59d383a6-12c7-5e1d-9617-d09cab35fc9c', name: 'Taylor Haley' },
   { id: 'patient_1', name: 'Patient 1' },
   { id: 'patient_2', name: 'Patient 2' },
 ];
 
 const STRATEGIES = [
   { id: 'vanilla', name: 'Vanilla' },
-  { id: 'hybrid', name: 'Hybrid BM25' },
-  { id: 'temporal', name: 'Temporal' },
-  { id: 'entity', name: 'Entity' },
+  { id: 'enhanced', name: 'Enhanced' },
 ];
 
 interface Message {
@@ -27,7 +25,7 @@ interface Message {
 
 export default function ChatPage() {
   const [selectedPatient, setSelectedPatient] = useState(SAMPLE_PATIENTS[0].id);
-  const [selectedStrategy, setSelectedStrategy] = useState('hybrid');
+  const [selectedStrategy, setSelectedStrategy] = useState('vanilla');
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);

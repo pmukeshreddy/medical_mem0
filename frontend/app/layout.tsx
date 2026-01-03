@@ -24,9 +24,6 @@ export default function RootLayout({
                 <a href="/" className="text-gray-600 hover:text-blue-600">
                   Search
                 </a>
-                <a href="/chat" className="text-gray-600 hover:text-blue-600">
-                  Chat
-                </a>
                 <a href="/about" className="text-gray-600 hover:text-blue-600">
                   About
                 </a>

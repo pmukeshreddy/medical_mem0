@@ -56,51 +56,24 @@ export default function AboutPage() {
             </p>
           </div>
           <div className="border-l-4 border-green-500 pl-4">
-            <h3 className="font-medium">Hybrid BM25</h3>
+            <h3 className="font-medium">Enhanced</h3>
             <p className="text-sm text-gray-600">
-              Combines sparse (BM25) and dense retrieval with score fusion
-            </p>
-          </div>
-          <div className="border-l-4 border-yellow-500 pl-4">
-            <h3 className="font-medium">Temporal Decay</h3>
-            <p className="text-sm text-gray-600">
-              Boosts recent memories using exponential time decay
-            </p>
-          </div>
-          <div className="border-l-4 border-purple-500 pl-4">
-            <h3 className="font-medium">Entity Filtered</h3>
-            <p className="text-sm text-gray-600">
-              Pre-filters by medical entities, boosts matching content
+              LLM-powered medical term expansion for improved clinical retrieval
             </p>
           </div>
         </div>
       </div>
 
-      {/* Research */}
+      {/* How Enhanced Works */}
       <div className="bg-white rounded-lg shadow-sm border p-6 mb-8">
-        <h2 className="text-xl font-semibold mb-4">Research Implementations</h2>
-        <div className="space-y-4">
-          <div className="p-4 bg-blue-50 rounded-lg">
-            <h3 className="font-medium text-blue-900">HyDE (Hypothetical Document Embeddings)</h3>
-            <p className="text-sm text-blue-700 mt-1">
-              Generates hypothetical answer first, then uses that for retrieval.
-              Based on "Precise Zero-Shot Dense Retrieval" (2022)
-            </p>
-          </div>
-          <div className="p-4 bg-green-50 rounded-lg">
-            <h3 className="font-medium text-green-900">MemWalker</h3>
-            <p className="text-sm text-green-700 mt-1">
-              Hierarchical memory traversal - organizes memories into tree structure
-              and traverses relevant branches
-            </p>
-          </div>
-          <div className="p-4 bg-purple-50 rounded-lg">
-            <h3 className="font-medium text-purple-900">Temporal Attention</h3>
-            <p className="text-sm text-purple-700 mt-1">
-              Learned decay rates per category - chronic conditions decay slowly,
-              acute episodes decay quickly
-            </p>
-          </div>
+        <h2 className="text-xl font-semibold mb-4">How Enhanced Retrieval Works</h2>
+        <div className="p-4 bg-green-50 rounded-lg">
+          <h3 className="font-medium text-green-900">LLM Medical Term Expansion</h3>
+          <p className="text-sm text-green-700 mt-1">
+            Uses GPT-4o-mini to extract clinical synonyms, abbreviations, and related 
+            medical concepts from the query. For example, "diabetes" expands to include 
+            "DM", "blood glucose", "HbA1c", "hyperglycemia", etc.
+          </p>
         </div>
       </div>
 
