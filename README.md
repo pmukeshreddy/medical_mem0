@@ -167,6 +167,4 @@ Currently, the production app uses `vanilla` and `enhanced` strategies via the m
 - **LLM:** OpenAI GPT-4o-mini
 - **Embeddings:** text-embedding-3-small
 
-## License
 
-MIT
